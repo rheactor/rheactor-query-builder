@@ -1,0 +1,1 @@
+export function isFalseable(e){return!1===e||null==e}

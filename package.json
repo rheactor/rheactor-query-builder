@@ -1,0 +1,42 @@
+{
+  "name": "@rheactor/rheactor-query-builder",
+  "description": "Rheactor Query Builder for SQLite.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "default": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "scripts": {
+    "build": "rimraf ./dist && tsc -p ./tsconfig.build.json && tsc-alias && swc ./dist -d .",
+    "prettier": "prettier --check ./src ./tests",
+    "prettier:fix": "prettier --write ./src ./tests",
+    "eslint": "eslint ./src ./tests",
+    "eslint:fix": "eslint --fix ./src ./tests",
+    "tsc": "tsc --noEmit",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "@rheactor/eslint-config-rheactor": "github:rheactor/eslint-config-rheactor",
+    "@swc/cli": "^0.6.0",
+    "@swc/core": "^1.11.11",
+    "@types/node": "^22.13.10",
+    "@vitest/eslint-plugin": "^1.1.38",
+    "eslint": "^9.22.0",
+    "rimraf": "^6.0.1",
+    "tsc-alias": "^1.8.11",
+    "typescript": "^5.8.2",
+    "vite-tsconfig-paths": "^5.1.4",
+    "vitest": "^3.0.9"
+  }
+}
