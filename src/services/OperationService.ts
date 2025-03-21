@@ -1,6 +1,7 @@
 import type { Expression } from "@/types/Expression.js";
-import { isFalseable } from "@/types/Falseable.js";
 import type { Operation } from "@/types/Operation.js";
+
+import { isFalseable } from "@/services/FalseableService";
 
 export function joinOperations(
   operations: Operation[][],

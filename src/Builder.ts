@@ -3,10 +3,11 @@ import { joinOperations, operation } from "@/services/OperationService.js";
 import type { BuilderType } from "@/types/BuilderType.js";
 import type { Expression } from "@/types/Expression.js";
 import type { Falseable } from "@/types/Falseable.js";
-import { isFalseable } from "@/types/Falseable.js";
 import type { Identifier } from "@/types/Identifier.js";
 import type { Operation } from "@/types/Operation.js";
 import type { Value } from "@/types/Value.js";
+
+import { isFalseable } from "@/services/FalseableService";
 
 export class Builder {
   private readonly statements;
@@ -149,10 +150,9 @@ export class Builder {
         break;
 
       case "delete":
+      default:
         operations.push("DELETE FROM ");
         break;
-
-      default:
     }
 
     if (this.type === "select") {
