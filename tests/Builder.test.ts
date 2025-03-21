@@ -332,12 +332,16 @@ describe("class Builder", () => {
     ],
     [sql.select().where(sql.staticValue(null)), "SELECT TRUE WHERE NULL", []],
     [
-      sql.select().when(false, (builder) => builder.where(sql.value(true))),
+      sql
+        .select()
+        .conditional(false, (builder) => builder.where(sql.value(true))),
       "SELECT TRUE",
       [],
     ],
     [
-      sql.select().when(true, (builder) => builder.where(sql.value(true))),
+      sql
+        .select()
+        .conditional(true, (builder) => builder.where(sql.value(true))),
       "SELECT TRUE WHERE ?1",
       [1],
     ],
@@ -400,6 +404,24 @@ describe("class Builder", () => {
         .values(sql.eq("id", sql.value(456)), sql.staticValue(null)),
       "INSERT INTO [test] ([id], [name]) VALUES ([index], ?1), ([id] = ?2, NULL)",
       [123, 456],
+    ],
+    [sql.case("test"), "CASE [test] END", []],
+    [
+      sql
+        .case("test")
+        .when("index", sql.value(123))
+        .when(sql.value(456), sql.staticValue(null))
+        .else(sql.staticValue("else")),
+      'CASE [test] WHEN [index] THEN ?1 WHEN ?2 THEN NULL ELSE "else" END',
+      [123, 456],
+    ],
+    [
+      sql
+        .select("id")
+        .selectAliased(sql.case("test").when("index", sql.value(123)), "test")
+        .from("test"),
+      "SELECT [id], CASE [test] WHEN [index] THEN ?1 END AS [test] FROM [test]",
+      [123],
     ],
   ];
 

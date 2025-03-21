@@ -7,6 +7,7 @@ import type { Identifier } from "./types/Identifier.js";
 import type { JsonValue } from "./types/JsonValue.js";
 import type { Value } from "./types/Value.js";
 import type { ValueExtended } from "./types/ValueExtended.js";
+import { BuilderCase } from "./BuilderCase";
 import { BuilderDelete } from "./BuilderDelete";
 import { BuilderInsert } from "./BuilderInsert";
 import { BuilderSelect } from "./BuilderSelect";
@@ -16,6 +17,7 @@ declare const functions: {
     and(...expressions: Array<Falseable<Expression>>): Expression;
     between(identifier: Identifier, from: Expression, to: Expression): Expression;
     call: typeof call;
+    case(expression: Expression): BuilderCase;
     cast(expression: Expression, castType: Cast): Expression;
     collate(expression: Expression, collateType?: Collate): Expression;
     customCall: typeof customCall;

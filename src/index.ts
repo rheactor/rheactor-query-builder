@@ -8,6 +8,7 @@ import type { JsonValue } from "@/types/JsonValue.js";
 import type { Value } from "@/types/Value.js";
 import type { ValueExtended } from "@/types/ValueExtended.js";
 
+import { BuilderCase } from "@/BuilderCase";
 import { BuilderDelete } from "@/BuilderDelete";
 import { BuilderInsert } from "@/BuilderInsert";
 import { BuilderSelect } from "@/BuilderSelect";
@@ -28,6 +29,10 @@ const functions = {
   },
 
   call,
+
+  case(expression: Expression) {
+    return new BuilderCase(expression);
+  },
 
   cast(expression: Expression, castType: Cast): Expression {
     return { type: "CAST", expression, cast: castType };

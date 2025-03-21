@@ -12,7 +12,7 @@ import type { Identifier } from "@/types/Identifier";
 export abstract class Builder {
   protected readonly statements = new BuilderStatements();
 
-  public when(condition: boolean, then: (builder: this) => void) {
+  public conditional(condition: boolean, then: (builder: this) => void) {
     if (condition) {
       then(this);
     }

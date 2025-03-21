@@ -1,6 +1,7 @@
 import type { Expression } from "@/types/Expression.js";
 import type { Operation } from "@/types/Operation.js";
 
+import { Builder } from "@/Builder";
 import { isFalseable } from "@/services/FalseableService";
 
 export function joinOperations(
@@ -20,6 +21,10 @@ export function joinOperations(
 export function operation(expression: Expression): Operation[] {
   if (typeof expression === "string") {
     return [`[${expression}]`];
+  }
+
+  if (expression instanceof Builder) {
+    return expression.getOperations();
   }
 
   switch (expression.type) {
@@ -144,7 +149,7 @@ export function operation(expression: Expression): Operation[] {
     }
 
     case "EXISTS":
-      return ["EXISTS ( ", ...expression.builder.getOperations(), ")"];
+      return ["EXISTS ( ", ...operation(expression.builder), ")"];
 
     case "SET":
     default:

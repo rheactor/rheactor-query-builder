@@ -12,6 +12,7 @@ type ComparisonOperator = "!=" | "<" | "<=" | "=" | ">" | ">=";
 type LogicalOperator = "AND" | "OR";
 
 export type Expression =
+  | Builder
   | Identifier
   | {
       type: "BETWEEN";

@@ -6,7 +6,7 @@ import type { Falseable } from "./types/Falseable";
 import type { Identifier } from "./types/Identifier";
 export declare abstract class Builder {
     protected readonly statements: BuilderStatements;
-    when(condition: boolean, then: (builder: this) => void): this;
+    conditional(condition: boolean, then: (builder: this) => void): this;
     build(): {
         query: string;
         parameters: Value[];
