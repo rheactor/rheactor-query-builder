@@ -362,34 +362,39 @@ describe("class Builder", () => {
       [123],
     ],
     [
-      sql.update("test").where(sql.eq("index", sql.value(123))),
-      "UPDATE [test] WHERE [index] = ?1",
-      [123],
+      sql
+        .update("test")
+        .where(sql.eq("index", sql.value(123)))
+        .where(sql.eq("test", sql.value("abc")))
+        .limit(5)
+        .offset(10),
+      "UPDATE [test] WHERE [index] = ?1 AND [test] = ?2 LIMIT 5 OFFSET 10",
+      [123, "abc"],
     ],
-    [sql.delete().from("test"), "DELETE FROM [test]", []],
+    [sql.delete("test"), "DELETE FROM [test]", []],
     [
       sql
-        .delete()
-        .from("test")
-        .where(sql.eq("index", sql.value(123))),
-      "DELETE FROM [test] WHERE [index] = ?1",
-      [123],
+        .delete("test")
+        .where(sql.eq("index", sql.value(123)))
+        .where(sql.eq("test", sql.jsonValue(123)))
+        .limit(5)
+        .offset(10),
+      "DELETE FROM [test] WHERE [index] = ?1 AND [test] = ?2 LIMIT 5 OFFSET 10",
+      [123, "123"],
     ],
-    [sql.insert("id", "name"), "INSERT INTO", []],
     [
-      sql.insert("id", "name").into("test"),
+      sql.insert("test", ["id", "name"]),
       "INSERT INTO [test] ([id], [name])",
       [],
     ],
     [
-      sql.insert("id", "name").into("test").values("index", sql.value(123)),
+      sql.insert("test", ["id", "name"]).values("index", sql.value(123)),
       "INSERT INTO [test] ([id], [name]) VALUES ([index], ?1)",
       [123],
     ],
     [
       sql
-        .insert("id", "name")
-        .into("test")
+        .insert("test", ["id", "name"])
         .values("index", sql.value(123))
         .values(sql.eq("id", sql.value(456)), sql.staticValue(null)),
       "INSERT INTO [test] ([id], [name]) VALUES ([index], ?1), ([id] = ?2, NULL)",

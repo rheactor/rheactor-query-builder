@@ -1,22 +1,18 @@
 import { BuilderStatements } from "@/BuilderStatements.js";
-import { joinOperations, operation } from "@/services/OperationService.js";
-import type { BuilderType } from "@/types/BuilderType.js";
-import type { Expression } from "@/types/Expression.js";
-import type { Falseable } from "@/types/Falseable.js";
-import type { Identifier } from "@/types/Identifier.js";
 import type { Operation } from "@/types/Operation.js";
 import type { Value } from "@/types/Value.js";
 
 import { isFalseable } from "@/services/FalseableService";
+import { joinOperations, operation } from "@/services/OperationService";
 
-export class Builder {
-  private readonly statements;
+import type { Expression } from "@/types/Expression";
+import type { Falseable } from "@/types/Falseable";
+import type { Identifier } from "@/types/Identifier";
 
-  public constructor(private readonly type: BuilderType) {
-    this.statements = new BuilderStatements(type);
-  }
+export abstract class Builder {
+  protected readonly statements = new BuilderStatements();
 
-  public when(condition: boolean, then: (builder: Builder) => void) {
+  public when(condition: boolean, then: (builder: this) => void) {
     if (condition) {
       then(this);
     }
@@ -24,17 +20,39 @@ export class Builder {
     return this;
   }
 
-  public select(...columns: Array<Falseable<Expression>>) {
+  public build() {
+    const query: string[] = [];
+    const parameters: Value[] = [];
+
+    for (const buildOperation of this.getOperations()) {
+      if (typeof buildOperation === "string") {
+        query.push(buildOperation);
+      } else {
+        parameters.push(buildOperation.value);
+        query.push(`?${parameters.length}`);
+      }
+    }
+
+    return {
+      query: query.join("").trimEnd(),
+      parameters,
+    };
+  }
+
+  protected internalColumn(...columns: Array<Falseable<Expression>>) {
     for (const column of columns) {
-      this.selectAliased(column);
+      this.internalColumnAliased(column);
     }
 
     return this;
   }
 
-  public selectAliased(identifier: Falseable<Expression>, alias?: Identifier) {
+  protected internalColumnAliased(
+    identifier: Falseable<Expression>,
+    alias?: Identifier,
+  ) {
     if (!isFalseable(identifier)) {
-      this.statements.select.push(
+      this.statements.columns.push(
         operation({ type: "IDENTIFIER", identifier, alias }),
       );
     }
@@ -42,17 +60,20 @@ export class Builder {
     return this;
   }
 
-  public from(...tables: Array<Falseable<Identifier>>) {
+  protected internalTable(...tables: Array<Falseable<Identifier>>) {
     for (const table of tables) {
-      this.fromAliased(table);
+      this.internalTableAliased(table);
     }
 
     return this;
   }
 
-  public fromAliased(table: Falseable<Expression>, alias?: Identifier) {
+  protected internalTableAliased(
+    table: Falseable<Expression>,
+    alias?: Identifier,
+  ) {
     if (!isFalseable(table)) {
-      this.statements.reference.push(
+      this.statements.tables.push(
         operation({ type: "IDENTIFIER", identifier: table, alias }),
       );
     }
@@ -60,39 +81,17 @@ export class Builder {
     return this;
   }
 
-  public into(table: Identifier) {
-    this.statements.reference.push(
-      operation({ type: "IDENTIFIER", identifier: table }),
-    );
-
-    return this;
-  }
-
-  public set(identifier: Identifier, expression: Expression) {
-    this.statements.set.push(
-      operation({ type: "SET", identifier, expression }),
-    );
-
-    return this;
-  }
-
-  public values(...values: Expression[]) {
-    this.statements.values.push(values.map((value) => operation(value)));
-
-    return this;
-  }
-
-  public where(...expressions: Array<Falseable<Expression>>) {
+  protected internalWhere(...expressions: Array<Falseable<Expression>>) {
     for (const expression of expressions) {
       if (!isFalseable(expression)) {
-        this.statements.where.push(expression);
+        this.statements.wheres.push(expression);
       }
     }
 
     return this;
   }
 
-  public limit(
+  protected internalLimit(
     limit: Falseable<Expression> | number,
     offset?: Falseable<Expression> | number,
   ) {
@@ -104,13 +103,13 @@ export class Builder {
         : limit;
 
     if (arguments.length >= 2) {
-      this.offset(offset);
+      this.internalOffset(offset);
     }
 
     return this;
   }
 
-  public offset(offset: Falseable<Expression> | number) {
+  protected internalOffset(offset: Falseable<Expression> | number) {
     this.statements.offset =
       typeof offset === "number"
         ? offset === 0
@@ -123,118 +122,51 @@ export class Builder {
     return this;
   }
 
-  public getOperations() {
-    const operations: Operation[] = [];
-
-    switch (this.statements.type) {
-      case "select":
-        operations.push("SELECT ");
-
-        if (this.statements.select.length === 0) {
-          operations.push("TRUE ");
-        } else {
-          operations.push(
-            ...joinOperations(this.statements.select, ", ", false),
-            " ",
-          );
-        }
-
-        break;
-
-      case "update":
-        operations.push("UPDATE ");
-        break;
-
-      case "insert":
-        operations.push("INSERT INTO ");
-        break;
-
-      case "delete":
-      default:
-        operations.push("DELETE FROM ");
-        break;
-    }
-
-    if (this.type === "select") {
-      if (this.statements.reference.length > 0) {
-        operations.push(
-          "FROM ",
-          ...joinOperations(this.statements.reference, ", ", false),
-          " ",
-        );
-      }
-    } else if (this.type === "update" || this.type === "delete") {
+  protected generateFromOperation(operations: Operation[]) {
+    if (this.statements.tables.length > 0) {
       operations.push(
-        ...joinOperations(this.statements.reference, ", ", false),
+        "FROM ",
+        ...joinOperations(this.statements.tables, ", ", false),
         " ",
       );
-    } else if (this.statements.reference.length > 0) {
-      operations.push(
-        ...joinOperations(this.statements.reference, ", ", false),
-        " ",
-        ...joinOperations(this.statements.select, ", ", true),
-        " ",
-      );
-
-      if (this.statements.values.length > 0) {
-        operations.push("VALUES ");
-
-        operations.push(
-          ...joinOperations(
-            this.statements.values.flatMap((values) => [
-              joinOperations(values, ", ", true),
-            ]),
-            ", ",
-            false,
-          ),
-        );
-      }
     }
+  }
 
-    if (this.statements.set.length > 0) {
+  protected generateSetOperation(operations: Operation[]) {
+    if (this.statements.sets.length > 0) {
       operations.push("SET ");
-      operations.push(...joinOperations(this.statements.set, ", ", false), " ");
+      operations.push(
+        ...joinOperations(this.statements.sets, ", ", false),
+        " ",
+      );
     }
+  }
 
-    if (this.statements.where.length > 0) {
+  protected generateWhereOperation(operations: Operation[]) {
+    if (this.statements.wheres.length > 0) {
       const whereOperations = operation({
         type: "AND",
-        expressions: this.statements.where,
+        expressions: this.statements.wheres,
         includeParens: false,
       });
 
       if (whereOperations.length > 0) {
-        operations.push("WHERE ", ...whereOperations);
+        operations.push("WHERE ", ...whereOperations, " ");
       }
     }
+  }
 
+  protected generateLimitOperation(operations: Operation[]) {
     if (this.statements.limit !== undefined) {
       operations.push("LIMIT ", ...operation(this.statements.limit), " ");
     }
+  }
 
+  protected generateOffsetOperation(operations: Operation[]) {
     if (this.statements.offset !== undefined) {
       operations.push("OFFSET ", ...operation(this.statements.offset), " ");
     }
-
-    return operations;
   }
 
-  public build() {
-    const statements: string[] = [];
-    const parameters: Value[] = [];
-
-    for (const buildOperation of this.getOperations()) {
-      if (typeof buildOperation === "string") {
-        statements.push(buildOperation);
-      } else {
-        parameters.push(buildOperation.value);
-        statements.push(`?${parameters.length}`);
-      }
-    }
-
-    return {
-      query: statements.join("").trimEnd(),
-      parameters,
-    };
-  }
+  public abstract getOperations(): Operation[];
 }

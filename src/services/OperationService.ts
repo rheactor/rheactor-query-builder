@@ -98,7 +98,7 @@ export function operation(expression: Expression): Operation[] {
     case "COLLATE": {
       return [
         ...operation(expression.expression),
-        ` COLLATE ${expression.collate} `,
+        ` COLLATE ${expression.collate}`,
       ];
     }
 

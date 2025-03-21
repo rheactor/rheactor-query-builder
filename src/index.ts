@@ -1,4 +1,4 @@
-import { Builder } from "@/Builder.js";
+import type { Builder } from "@/Builder.js";
 import type { Cast } from "@/types/Cast.js";
 import type { Collate } from "@/types/Collate.js";
 import type { Expression } from "@/types/Expression.js";
@@ -7,6 +7,11 @@ import type { Identifier } from "@/types/Identifier.js";
 import type { JsonValue } from "@/types/JsonValue.js";
 import type { Value } from "@/types/Value.js";
 import type { ValueExtended } from "@/types/ValueExtended.js";
+
+import { BuilderDelete } from "@/BuilderDelete";
+import { BuilderInsert } from "@/BuilderInsert";
+import { BuilderSelect } from "@/BuilderSelect";
+import { BuilderUpdate } from "@/BuilderUpdate";
 
 const functions = {
   and(...expressions: Array<Falseable<Expression>>): Expression {
@@ -33,8 +38,8 @@ const functions = {
     return { type: "COLLATE", expression, collate: collateType };
   },
 
-  delete(): Builder {
-    return new Builder("delete");
+  delete(table: Identifier) {
+    return new BuilderDelete(table);
   },
 
   eq(sideA: Expression, sideB: Expression): Expression {
@@ -57,8 +62,8 @@ const functions = {
     return { type: "IS NULL", identifier };
   },
 
-  insert(...columns: Identifier[]) {
-    return new Builder("insert").select(...columns);
+  insert(table: Identifier, columns: Identifier[]) {
+    return new BuilderInsert(table, columns);
   },
 
   isNotNull(identifier: Identifier): Expression {
@@ -102,7 +107,7 @@ const functions = {
   },
 
   select(...columns: Array<Falseable<Expression>>) {
-    return new Builder("select").select(...columns);
+    return new BuilderSelect().select(...columns);
   },
 
   staticValue(argument: ValueExtended): Expression {
@@ -110,7 +115,7 @@ const functions = {
   },
 
   update(table: Identifier) {
-    return new Builder("update").from(table);
+    return new BuilderUpdate(table);
   },
 
   value(argument: Value): Expression {

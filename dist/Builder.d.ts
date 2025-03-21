@@ -1,27 +1,27 @@
-import type { BuilderType } from "./types/BuilderType.js";
-import type { Expression } from "./types/Expression.js";
-import type { Falseable } from "./types/Falseable.js";
-import type { Identifier } from "./types/Identifier.js";
+import { BuilderStatements } from "./BuilderStatements.js";
 import type { Operation } from "./types/Operation.js";
 import type { Value } from "./types/Value.js";
-export declare class Builder {
-    private readonly type;
-    private readonly statements;
-    constructor(type: BuilderType);
-    when(condition: boolean, then: (builder: Builder) => void): this;
-    select(...columns: Array<Falseable<Expression>>): this;
-    selectAliased(identifier: Falseable<Expression>, alias?: Identifier): this;
-    from(...tables: Array<Falseable<Identifier>>): this;
-    fromAliased(table: Falseable<Expression>, alias?: Identifier): this;
-    into(table: Identifier): this;
-    set(identifier: Identifier, expression: Expression): this;
-    values(...values: Expression[]): this;
-    where(...expressions: Array<Falseable<Expression>>): this;
-    limit(limit: Falseable<Expression> | number, offset?: Falseable<Expression> | number): this;
-    offset(offset: Falseable<Expression> | number): this;
-    getOperations(): Operation[];
+import type { Expression } from "./types/Expression";
+import type { Falseable } from "./types/Falseable";
+import type { Identifier } from "./types/Identifier";
+export declare abstract class Builder {
+    protected readonly statements: BuilderStatements;
+    when(condition: boolean, then: (builder: this) => void): this;
     build(): {
         query: string;
         parameters: Value[];
     };
+    protected internalColumn(...columns: Array<Falseable<Expression>>): this;
+    protected internalColumnAliased(identifier: Falseable<Expression>, alias?: Identifier): this;
+    protected internalTable(...tables: Array<Falseable<Identifier>>): this;
+    protected internalTableAliased(table: Falseable<Expression>, alias?: Identifier): this;
+    protected internalWhere(...expressions: Array<Falseable<Expression>>): this;
+    protected internalLimit(limit: Falseable<Expression> | number, offset?: Falseable<Expression> | number): this;
+    protected internalOffset(offset: Falseable<Expression> | number): this;
+    protected generateFromOperation(operations: Operation[]): void;
+    protected generateSetOperation(operations: Operation[]): void;
+    protected generateWhereOperation(operations: Operation[]): void;
+    protected generateLimitOperation(operations: Operation[]): void;
+    protected generateOffsetOperation(operations: Operation[]): void;
+    abstract getOperations(): Operation[];
 }
