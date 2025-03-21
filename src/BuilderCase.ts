@@ -10,7 +10,7 @@ export class BuilderCase extends Builder {
 
   private expressionElse?: Expression;
 
-  public constructor(private readonly expression: Expression) {
+  public constructor(private readonly expression?: Expression) {
     super();
   }
 
@@ -29,7 +29,9 @@ export class BuilderCase extends Builder {
   public override getOperations() {
     const operations: Operation[] = ["CASE "];
 
-    operations.push(...operation(this.expression), " ");
+    if (this.expression !== undefined) {
+      operations.push(...operation(this.expression), " ");
+    }
 
     for (const [when, then] of this.whens) {
       operations.push(

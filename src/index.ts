@@ -30,7 +30,7 @@ const functions = {
 
   call,
 
-  case(expression: Expression) {
+  case(expression?: Expression) {
     return new BuilderCase(expression);
   },
 

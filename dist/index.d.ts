@@ -17,7 +17,7 @@ declare const functions: {
     and(...expressions: Array<Falseable<Expression>>): Expression;
     between(identifier: Identifier, from: Expression, to: Expression): Expression;
     call: typeof call;
-    case(expression: Expression): BuilderCase;
+    case(expression?: Expression): BuilderCase;
     cast(expression: Expression, castType: Cast): Expression;
     collate(expression: Expression, collateType?: Collate): Expression;
     customCall: typeof customCall;

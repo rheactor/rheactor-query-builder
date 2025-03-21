@@ -405,6 +405,7 @@ describe("class Builder", () => {
       "INSERT INTO [test] ([id], [name]) VALUES ([index], ?1), ([id] = ?2, NULL)",
       [123, 456],
     ],
+    [sql.case(), "CASE END", []],
     [sql.case("test"), "CASE [test] END", []],
     [
       sql
