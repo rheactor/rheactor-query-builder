@@ -129,11 +129,14 @@ export function operation(expression: Expression): Operation[] {
         : [JSON.stringify(expression.argument)];
 
     case "CALL": {
-      const functionArguments = expression.functionArguments.flatMap(
-        (argument) => operation(argument),
-      );
-
-      return [`${expression.identifier}(`, ...functionArguments, ")"];
+      return [
+        expression.identifier,
+        ...joinOperations(
+          expression.functionArguments.map((argument) => operation(argument)),
+          ", ",
+          true,
+        ),
+      ];
     }
 
     case "NOT": {
