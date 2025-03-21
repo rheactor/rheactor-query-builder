@@ -1,0 +1,1 @@
+function t(n,...r){return{type:"CALL",identifier:n,functionArguments:r}}function n(...r){return t(...r)}export{n as call,t as customCall};

@@ -12,6 +12,7 @@ import { BuilderDelete } from "@/BuilderDelete";
 import { BuilderInsert } from "@/BuilderInsert";
 import { BuilderSelect } from "@/BuilderSelect";
 import { BuilderUpdate } from "@/BuilderUpdate";
+import { call, customCall } from "@/supports/SqliteFunctions";
 
 const functions = {
   and(...expressions: Array<Falseable<Expression>>): Expression {
@@ -26,9 +27,7 @@ const functions = {
     return { type: "BETWEEN", identifier, from, to };
   },
 
-  call(identifier: string, ...functionArguments: Expression[]): Expression {
-    return { type: "CALL", identifier, functionArguments };
-  },
+  call,
 
   cast(expression: Expression, castType: Cast): Expression {
     return { type: "CAST", expression, cast: castType };
@@ -37,6 +36,8 @@ const functions = {
   collate(expression: Expression, collateType: Collate = "BINARY"): Expression {
     return { type: "COLLATE", expression, collate: collateType };
   },
+
+  customCall,
 
   delete(table: Identifier) {
     return new BuilderDelete(table);

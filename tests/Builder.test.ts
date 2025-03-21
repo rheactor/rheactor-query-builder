@@ -309,6 +309,7 @@ describe("class Builder", () => {
       "SELECT TRUE WHERE JSON_INSERT(?1, ?2, ?3)",
       ["{}", "$[#]", 123],
     ],
+    [sql.select().where(sql.customCall("XYZ")), "SELECT TRUE WHERE XYZ()", []],
     [
       sql.select().where(sql.exists(sql.select())),
       "SELECT TRUE WHERE EXISTS ( SELECT TRUE )",

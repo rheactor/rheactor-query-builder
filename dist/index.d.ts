@@ -11,12 +11,14 @@ import { BuilderDelete } from "./BuilderDelete";
 import { BuilderInsert } from "./BuilderInsert";
 import { BuilderSelect } from "./BuilderSelect";
 import { BuilderUpdate } from "./BuilderUpdate";
+import { call, customCall } from "./supports/SqliteFunctions";
 declare const functions: {
     and(...expressions: Array<Falseable<Expression>>): Expression;
     between(identifier: Identifier, from: Expression, to: Expression): Expression;
-    call(identifier: string, ...functionArguments: Expression[]): Expression;
+    call: typeof call;
     cast(expression: Expression, castType: Cast): Expression;
     collate(expression: Expression, collateType?: Collate): Expression;
+    customCall: typeof customCall;
     delete(table: Identifier): BuilderDelete;
     eq(sideA: Expression, sideB: Expression): Expression;
     exists(builder: Builder): Expression;
