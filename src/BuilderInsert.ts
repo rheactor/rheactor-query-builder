@@ -1,10 +1,10 @@
 import { joinOperations, operation } from "@/services/OperationService.js";
 import type { Operation } from "@/types/Operation.js";
 
-import { Builder } from "@/Builder";
-
 import type { Expression } from "@/types/Expression";
 import type { Identifier } from "@/types/Identifier";
+
+import { Builder } from "@/Builder";
 
 export class BuilderInsert extends Builder {
   public constructor(table: Identifier, columns: Identifier[]) {

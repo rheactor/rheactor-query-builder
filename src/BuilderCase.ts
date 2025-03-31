@@ -1,9 +1,9 @@
 import type { Operation } from "@/types/Operation.js";
 
+import type { Expression } from "@/types/Expression";
+
 import { Builder } from "@/Builder";
 import { operation } from "@/services/OperationService";
-
-import type { Expression } from "@/types/Expression";
 
 export class BuilderCase extends Builder {
   private readonly whens: Array<[when: Expression, then: Expression]> = [];

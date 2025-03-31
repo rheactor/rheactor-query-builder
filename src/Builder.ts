@@ -2,12 +2,12 @@ import { BuilderStatements } from "@/BuilderStatements.js";
 import type { Operation } from "@/types/Operation.js";
 import type { Value } from "@/types/Value.js";
 
-import { isFalseable } from "@/services/FalseableService";
-import { joinOperations, operation } from "@/services/OperationService";
-
 import type { Expression } from "@/types/Expression";
 import type { Falseable } from "@/types/Falseable";
 import type { Identifier } from "@/types/Identifier";
+
+import { isFalseable } from "@/services/FalseableService";
+import { joinOperations, operation } from "@/services/OperationService";
 
 export abstract class Builder {
   protected readonly statements = new BuilderStatements();
@@ -99,8 +99,8 @@ export abstract class Builder {
       typeof limit === "number"
         ? { type: "STATIC", argument: limit }
         : isFalseable(limit)
-        ? undefined
-        : limit;
+          ? undefined
+          : limit;
 
     if (arguments.length >= 2) {
       this.internalOffset(offset);
@@ -116,8 +116,8 @@ export abstract class Builder {
           ? undefined
           : { type: "STATIC", argument: offset }
         : isFalseable(offset)
-        ? undefined
-        : offset;
+          ? undefined
+          : offset;
 
     return this;
   }
