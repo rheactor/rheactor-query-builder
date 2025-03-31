@@ -1,1 +1,0 @@
-class s{constructor(){this.columns=[],this.tables=[],this.sets=[],this.wheres=[],this.values=[]}}export{s as BuilderStatements};

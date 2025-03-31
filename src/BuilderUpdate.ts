@@ -14,7 +14,7 @@ export class BuilderUpdate extends Builder {
   }
 
   public set(identifier: Identifier, expression: Expression) {
-    this.statements.sets.push(
+    this.setsOperations.push(
       operation({ type: "SET", identifier, expression }),
     );
 
@@ -36,10 +36,7 @@ export class BuilderUpdate extends Builder {
   public override getOperations() {
     const operations: Operation[] = ["UPDATE "];
 
-    operations.push(
-      ...joinOperations(this.statements.tables, ", ", false),
-      " ",
-    );
+    operations.push(...joinOperations(this.tablesOperations, ", ", false), " ");
 
     this.generateSetOperation(operations);
     this.generateWhereOperation(operations);

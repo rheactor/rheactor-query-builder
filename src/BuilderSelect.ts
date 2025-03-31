@@ -58,11 +58,11 @@ export class BuilderSelect extends Builder {
   public override getOperations() {
     const operations: Operation[] = ["SELECT "];
 
-    if (this.statements.columns.length === 0) {
+    if (this.columnsOperations.length === 0) {
       operations.push("TRUE ");
     } else {
       operations.push(
-        ...joinOperations(this.statements.columns, ", ", false),
+        ...joinOperations(this.columnsOperations, ", ", false),
         " ",
       );
     }

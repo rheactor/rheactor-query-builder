@@ -1,11 +1,16 @@
-import { BuilderStatements } from "./BuilderStatements.js";
 import type { Operation } from "./types/Operation.js";
 import type { Value } from "./types/Value.js";
 import type { Expression } from "./types/Expression";
 import type { Falseable } from "./types/Falseable";
 import type { Identifier } from "./types/Identifier";
 export declare abstract class Builder {
-    protected readonly statements: BuilderStatements;
+    protected readonly columnsOperations: Operation[][];
+    protected readonly tablesOperations: Operation[][];
+    protected readonly setsOperations: Operation[][];
+    protected readonly valuesOperations: Operation[][][];
+    private readonly wheresExpressions;
+    private limitExpression?;
+    private offsetExpression?;
     conditional(condition: boolean, then: (builder: this) => void): this;
     build(): {
         query: string;

@@ -27,10 +27,7 @@ export class BuilderDelete extends Builder {
   public override getOperations() {
     const operations: Operation[] = ["DELETE FROM "];
 
-    operations.push(
-      ...joinOperations(this.statements.tables, ", ", false),
-      " ",
-    );
+    operations.push(...joinOperations(this.tablesOperations, ", ", false), " ");
 
     this.generateWhereOperation(operations);
     this.generateLimitOperation(operations);

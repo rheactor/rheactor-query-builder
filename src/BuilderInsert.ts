@@ -15,7 +15,7 @@ export class BuilderInsert extends Builder {
   }
 
   public values(...values: Expression[]) {
-    this.statements.values.push(values.map((value) => operation(value)));
+    this.valuesOperations.push(values.map((value) => operation(value)));
 
     return this;
   }
@@ -23,20 +23,20 @@ export class BuilderInsert extends Builder {
   public override getOperations() {
     const operations: Operation[] = ["INSERT INTO "];
 
-    if (this.statements.tables.length > 0) {
+    if (this.tablesOperations.length > 0) {
       operations.push(
-        ...joinOperations(this.statements.tables, ", ", false),
+        ...joinOperations(this.tablesOperations, ", ", false),
         " ",
-        ...joinOperations(this.statements.columns, ", ", true),
+        ...joinOperations(this.columnsOperations, ", ", true),
         " ",
       );
 
-      if (this.statements.values.length > 0) {
+      if (this.valuesOperations.length > 0) {
         operations.push("VALUES ");
 
         operations.push(
           ...joinOperations(
-            this.statements.values.flatMap((values) => [
+            this.valuesOperations.flatMap((values) => [
               joinOperations(values, ", ", true),
             ]),
             ", ",

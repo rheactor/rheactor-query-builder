@@ -1,4 +1,3 @@
-import { BuilderStatements } from "@/BuilderStatements.js";
 import type { Operation } from "@/types/Operation.js";
 import type { Value } from "@/types/Value.js";
 
@@ -10,7 +9,19 @@ import { isFalseable } from "@/services/FalseableService";
 import { joinOperations, operation } from "@/services/OperationService";
 
 export abstract class Builder {
-  protected readonly statements = new BuilderStatements();
+  protected readonly columnsOperations: Operation[][] = [];
+
+  protected readonly tablesOperations: Operation[][] = [];
+
+  protected readonly setsOperations: Operation[][] = [];
+
+  protected readonly valuesOperations: Operation[][][] = [];
+
+  private readonly wheresExpressions: Expression[] = [];
+
+  private limitExpression?: Expression;
+
+  private offsetExpression?: Expression;
 
   public conditional(condition: boolean, then: (builder: this) => void) {
     if (condition) {
@@ -52,7 +63,7 @@ export abstract class Builder {
     alias?: Identifier,
   ) {
     if (!isFalseable(identifier)) {
-      this.statements.columns.push(
+      this.columnsOperations.push(
         operation({ type: "IDENTIFIER", identifier, alias }),
       );
     }
@@ -73,7 +84,7 @@ export abstract class Builder {
     alias?: Identifier,
   ) {
     if (!isFalseable(table)) {
-      this.statements.tables.push(
+      this.tablesOperations.push(
         operation({ type: "IDENTIFIER", identifier: table, alias }),
       );
     }
@@ -84,7 +95,7 @@ export abstract class Builder {
   protected internalWhere(...expressions: Array<Falseable<Expression>>) {
     for (const expression of expressions) {
       if (!isFalseable(expression)) {
-        this.statements.wheres.push(expression);
+        this.wheresExpressions.push(expression);
       }
     }
 
@@ -95,12 +106,12 @@ export abstract class Builder {
     limit: Falseable<Expression> | number,
     offset?: Falseable<Expression> | number,
   ) {
-    this.statements.limit =
+    this.limitExpression =
       typeof limit === "number"
         ? { type: "STATIC", argument: limit }
         : isFalseable(limit)
-          ? undefined
-          : limit;
+        ? undefined
+        : limit;
 
     if (arguments.length >= 2) {
       this.internalOffset(offset);
@@ -110,43 +121,40 @@ export abstract class Builder {
   }
 
   protected internalOffset(offset: Falseable<Expression> | number) {
-    this.statements.offset =
+    this.offsetExpression =
       typeof offset === "number"
         ? offset === 0
           ? undefined
           : { type: "STATIC", argument: offset }
         : isFalseable(offset)
-          ? undefined
-          : offset;
+        ? undefined
+        : offset;
 
     return this;
   }
 
   protected generateFromOperation(operations: Operation[]) {
-    if (this.statements.tables.length > 0) {
+    if (this.tablesOperations.length > 0) {
       operations.push(
         "FROM ",
-        ...joinOperations(this.statements.tables, ", ", false),
+        ...joinOperations(this.tablesOperations, ", ", false),
         " ",
       );
     }
   }
 
   protected generateSetOperation(operations: Operation[]) {
-    if (this.statements.sets.length > 0) {
+    if (this.setsOperations.length > 0) {
       operations.push("SET ");
-      operations.push(
-        ...joinOperations(this.statements.sets, ", ", false),
-        " ",
-      );
+      operations.push(...joinOperations(this.setsOperations, ", ", false), " ");
     }
   }
 
   protected generateWhereOperation(operations: Operation[]) {
-    if (this.statements.wheres.length > 0) {
+    if (this.wheresExpressions.length > 0) {
       const whereOperations = operation({
         type: "AND",
-        expressions: this.statements.wheres,
+        expressions: this.wheresExpressions,
         includeParens: false,
       });
 
@@ -157,14 +165,14 @@ export abstract class Builder {
   }
 
   protected generateLimitOperation(operations: Operation[]) {
-    if (this.statements.limit !== undefined) {
-      operations.push("LIMIT ", ...operation(this.statements.limit), " ");
+    if (this.limitExpression !== undefined) {
+      operations.push("LIMIT ", ...operation(this.limitExpression), " ");
     }
   }
 
   protected generateOffsetOperation(operations: Operation[]) {
-    if (this.statements.offset !== undefined) {
-      operations.push("OFFSET ", ...operation(this.statements.offset), " ");
+    if (this.offsetExpression !== undefined) {
+      operations.push("OFFSET ", ...operation(this.offsetExpression), " ");
     }
   }
 
