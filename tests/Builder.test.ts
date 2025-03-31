@@ -345,14 +345,52 @@ describe("class Builder", () => {
       "SELECT TRUE WHERE ?1",
       [1],
     ],
+    [sql.select().orderBy("id"), "SELECT TRUE ORDER BY [id]", []],
+    [sql.select().orderBy("id", "ASC"), "SELECT TRUE ORDER BY [id] ASC", []],
+    [sql.select().orderBy("id", "DESC"), "SELECT TRUE ORDER BY [id] DESC", []],
+    [
+      sql.select().orderBy("id", undefined, "NULLS FIRST"),
+      "SELECT TRUE ORDER BY [id] NULLS FIRST",
+      [],
+    ],
+    [
+      sql.select().orderBy("id", "DESC", "NULLS LAST"),
+      "SELECT TRUE ORDER BY [id] DESC NULLS LAST",
+      [],
+    ],
+    [
+      sql.select().orderBy(sql.collate("id", "NOCASE")),
+      "SELECT TRUE ORDER BY [id] COLLATE NOCASE",
+      [],
+    ],
+    [
+      sql.select().orderBy(sql.staticValue("test")),
+      'SELECT TRUE ORDER BY "test"',
+      [],
+    ],
+    [
+      sql.select().orderBy(sql.call("IFNULL", "id", "index")),
+      "SELECT TRUE ORDER BY IFNULL([id], [index])",
+      [],
+    ],
+    [
+      sql
+        .select()
+        .orderBy("id", undefined, "NULLS FIRST")
+        .orderBy("name", "ASC"),
+      "SELECT TRUE ORDER BY [id] NULLS FIRST, [name] ASC",
+      [],
+    ],
     [
       sql
         .select("id", "name")
         .from("users")
         .where(sql.eq("name", sql.collate(sql.value("John"), "NOCASE")))
         .where(alwaysFalse() && sql.value("always ignore"))
+        .orderBy("id", "DESC", "NULLS FIRST")
+        .orderBy("name", "ASC")
         .limit(sql.staticValue(10), sql.value(20)),
-      "SELECT [id], [name] FROM [users] WHERE [name] = ?1 COLLATE NOCASE LIMIT 10 OFFSET ?2",
+      "SELECT [id], [name] FROM [users] WHERE [name] = ?1 COLLATE NOCASE ORDER BY [id] DESC NULLS FIRST, [name] ASC LIMIT 10 OFFSET ?2",
       ["John", 20],
     ],
     [sql.update("test"), "UPDATE [test]", []],
