@@ -20,6 +20,10 @@ export function joinOperations(
 
 export function operation(expression: Expression): Operation[] {
   if (typeof expression === "string") {
+    if (expression === "*") {
+      return ["*"];
+    }
+
     const identifier = expression.replaceAll(/[\\`]/g, "");
 
     return [`\`${identifier}\``];
