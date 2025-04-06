@@ -24,6 +24,12 @@ export function operation(expression: Expression): Operation[] {
       return ["*"];
     }
 
+    if (expression.includes(".")) {
+      const [table, column] = expression.split(".", 2);
+
+      return [...operation(table!), ".", ...operation(column! || "*")];
+    }
+
     const identifier = expression.replaceAll(/[\\`]/g, "");
 
     return [`\`${identifier}\``];
