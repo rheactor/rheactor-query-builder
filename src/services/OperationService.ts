@@ -20,7 +20,9 @@ export function joinOperations(
 
 export function operation(expression: Expression): Operation[] {
   if (typeof expression === "string") {
-    return [`[${expression}]`];
+    const identifier = expression.replaceAll(/[\\`]/g, "");
+
+    return [`\`${identifier}\``];
   }
 
   if (expression instanceof Builder) {
@@ -47,7 +49,7 @@ export function operation(expression: Expression): Operation[] {
         : [
             ...operation(expression.identifier),
             " AS ",
-            `[${expression.alias}]`,
+            ...operation(expression.alias),
           ];
 
     case "AND":
@@ -154,7 +156,8 @@ export function operation(expression: Expression): Operation[] {
     case "SET":
     default:
       return [
-        `[${expression.identifier}] = `,
+        ...operation(expression.identifier),
+        " = ",
         ...operation(expression.expression),
       ];
   }

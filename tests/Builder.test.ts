@@ -15,16 +15,18 @@ describe("class Builder", () => {
     [sql.select(), "SELECT TRUE", []],
     [sql.select(false), "SELECT TRUE", []],
     [sql.select(undefined), "SELECT TRUE", []],
-    [sql.select(false, "test"), "SELECT [test]", []],
-    [sql.select("test", false), "SELECT [test]", []],
-    [sql.select("test", undefined), "SELECT [test]", []],
-    [sql.select("test"), "SELECT [test]", []],
-    [sql.select("test", "test"), "SELECT [test], [test]", []],
-    [sql.select("test1", "test2"), "SELECT [test1], [test2]", []],
+    [sql.select(false, "test"), "SELECT `test`", []],
+    [sql.select("test", false), "SELECT `test`", []],
+    [sql.select("test", undefined), "SELECT `test`", []],
+    [sql.select("test"), "SELECT `test`", []],
+    [sql.select("`test`"), "SELECT `test`", []],
+    [sql.select("`test\\`"), "SELECT `test`", []],
+    [sql.select("test", "test"), "SELECT `test`, `test`", []],
+    [sql.select("test1", "test2"), "SELECT `test1`, `test2`", []],
     [sql.select(sql.value(123)), "SELECT ?1", [123]],
     [
       sql.select().selectAliased("test1", "test2"),
-      "SELECT [test1] AS [test2]",
+      "SELECT `test1` AS `test2`",
       [],
     ],
     [
@@ -33,18 +35,18 @@ describe("class Builder", () => {
         .selectAliased("test1", "test2")
         .selectAliased("test3", "test4")
         .selectAliased(false, "test5"),
-      "SELECT [test0], [test1] AS [test2], [test3] AS [test4]",
+      "SELECT `test0`, `test1` AS `test2`, `test3` AS `test4`",
       [],
     ],
     [sql.select().from(false), "SELECT TRUE", []],
-    [sql.select().from("test"), "SELECT TRUE FROM [test]", []],
-    [sql.select().from("test", "test"), "SELECT TRUE FROM [test], [test]", []],
+    [sql.select().from("test"), "SELECT TRUE FROM `test`", []],
+    [sql.select().from("test", "test"), "SELECT TRUE FROM `test`, `test`", []],
     [
       sql
         .select()
         .fromAliased("test1", "test2")
         .fromAliased(sql.value(123), "test2"),
-      "SELECT TRUE FROM [test1] AS [test2], ?1 AS [test2]",
+      "SELECT TRUE FROM `test1` AS `test2`, ?1 AS `test2`",
       [123],
     ],
     [sql.select().limit(10), "SELECT TRUE LIMIT 10", []],
@@ -78,12 +80,12 @@ describe("class Builder", () => {
     [sql.select().where(sql.value(123)), "SELECT TRUE WHERE ?1", [123]],
     [
       sql.select().where(sql.eq("test1", "test2")),
-      "SELECT TRUE WHERE [test1] = [test2]",
+      "SELECT TRUE WHERE `test1` = `test2`",
       [],
     ],
     [
       sql.select().where(sql.eq("test", sql.value(123))),
-      "SELECT TRUE WHERE [test] = ?1",
+      "SELECT TRUE WHERE `test` = ?1",
       [123],
     ],
     [
@@ -93,7 +95,7 @@ describe("class Builder", () => {
           sql.eq("test1", sql.value(123)),
           sql.eq("test2", sql.value(123)),
         ),
-      "SELECT TRUE WHERE [test1] = ?1 AND [test2] = ?2",
+      "SELECT TRUE WHERE `test1` = ?1 AND `test2` = ?2",
       [123, 123],
     ],
     [
@@ -103,83 +105,83 @@ describe("class Builder", () => {
           sql.eq("test1", sql.value(123)),
           sql.eq("test2", sql.value(456)),
         ),
-      "SELECT TRUE WHERE [test1] = ?1 AND [test2] = ?2",
+      "SELECT TRUE WHERE `test1` = ?1 AND `test2` = ?2",
       [123, 456],
     ],
     [
       sql.select().where(sql.neq("test", sql.value(123))),
-      "SELECT TRUE WHERE [test] != ?1",
+      "SELECT TRUE WHERE `test` != ?1",
       [123],
     ],
     [
       sql.select().where(sql.gt("test", sql.value(123))),
-      "SELECT TRUE WHERE [test] > ?1",
+      "SELECT TRUE WHERE `test` > ?1",
       [123],
     ],
     [
       sql.select().where(sql.gte("test", sql.value(123))),
-      "SELECT TRUE WHERE [test] >= ?1",
+      "SELECT TRUE WHERE `test` >= ?1",
       [123],
     ],
     [
       sql.select().where(sql.lt("test", sql.value(123))),
-      "SELECT TRUE WHERE [test] < ?1",
+      "SELECT TRUE WHERE `test` < ?1",
       [123],
     ],
     [
       sql.select().where(sql.lte("test", sql.value(123))),
-      "SELECT TRUE WHERE [test] <= ?1",
+      "SELECT TRUE WHERE `test` <= ?1",
       [123],
     ],
     [
       sql.select().where(sql.not(sql.eq("test", sql.value(123)))),
-      "SELECT TRUE WHERE NOT [test] = ?1",
+      "SELECT TRUE WHERE NOT `test` = ?1",
       [123],
     ],
     [
       sql.select().where(sql.not(sql.not(sql.eq("test", sql.value(123))))),
-      "SELECT TRUE WHERE NOT NOT [test] = ?1",
+      "SELECT TRUE WHERE NOT NOT `test` = ?1",
       [123],
     ],
     [
       sql.select().where(sql.between("test", sql.value(123), sql.value(123))),
-      "SELECT TRUE WHERE [test] BETWEEN ?1 AND ?2",
+      "SELECT TRUE WHERE `test` BETWEEN ?1 AND ?2",
       [123, 123],
     ],
     [
       sql.select().where(sql.between("test", sql.value(123), sql.value(456))),
-      "SELECT TRUE WHERE [test] BETWEEN ?1 AND ?2",
+      "SELECT TRUE WHERE `test` BETWEEN ?1 AND ?2",
       [123, 456],
     ],
     [
       sql
         .select()
         .where(sql.notBetween("test", sql.value(123), sql.value(123))),
-      "SELECT TRUE WHERE NOT [test] BETWEEN ?1 AND ?2",
+      "SELECT TRUE WHERE NOT `test` BETWEEN ?1 AND ?2",
       [123, 123],
     ],
     [
       sql
         .select()
         .where(sql.notBetween("test", sql.value(123), sql.value(456))),
-      "SELECT TRUE WHERE NOT [test] BETWEEN ?1 AND ?2",
+      "SELECT TRUE WHERE NOT `test` BETWEEN ?1 AND ?2",
       [123, 456],
     ],
     [
       sql.select().where(sql.isNull("test")),
-      "SELECT TRUE WHERE [test] IS NULL",
+      "SELECT TRUE WHERE `test` IS NULL",
       [],
     ],
     [
       sql.select().where(sql.isNotNull("test")),
-      "SELECT TRUE WHERE NOT [test] IS NULL",
+      "SELECT TRUE WHERE NOT `test` IS NULL",
       [],
     ],
     [sql.select().where(sql.or(false)), "SELECT TRUE", []],
     [sql.select().where(sql.or(false), sql.or(false)), "SELECT TRUE", []],
     [
       sql.select().where(sql.or(sql.eq("test1", sql.value(123)))),
-      "SELECT TRUE WHERE [test1] = ?1",
+      "SELECT TRUE WHERE `test1` = ?1",
       [123],
     ],
     [
@@ -192,7 +194,7 @@ describe("class Builder", () => {
             sql.eq("test2", sql.value(456)),
           ),
         ),
-      "SELECT TRUE WHERE ([test1] = ?1 OR [test2] = ?2)",
+      "SELECT TRUE WHERE (`test1` = ?1 OR `test2` = ?2)",
       [123, 456],
     ],
     [
@@ -205,7 +207,7 @@ describe("class Builder", () => {
             sql.eq("test2", sql.value(456)),
           ),
         ),
-      "SELECT TRUE WHERE ([test1] = ?1 AND [test2] = ?2)",
+      "SELECT TRUE WHERE (`test1` = ?1 AND `test2` = ?2)",
       [123, 456],
     ],
     [
@@ -215,7 +217,7 @@ describe("class Builder", () => {
           sql.or(sql.eq("test1", sql.value(123))),
           sql.and(sql.eq("test2", sql.value(123))),
         ),
-      "SELECT TRUE WHERE [test1] = ?1 AND [test2] = ?2",
+      "SELECT TRUE WHERE `test1` = ?1 AND `test2` = ?2",
       [123, 123],
     ],
     [
@@ -228,7 +230,7 @@ describe("class Builder", () => {
             sql.eq("test2", sql.value(456)),
           ),
         ),
-      "SELECT TRUE WHERE ([test1] = ?1 AND [test2] = ?2)",
+      "SELECT TRUE WHERE (`test1` = ?1 AND `test2` = ?2)",
       [123, 456],
     ],
     [
@@ -241,17 +243,17 @@ describe("class Builder", () => {
             sql.neq("test2", sql.value(456)),
           ),
         ),
-      "SELECT TRUE WHERE ([test1] = ?1 AND NOT [test2] IS NULL AND [test2] != ?2)",
+      "SELECT TRUE WHERE (`test1` = ?1 AND NOT `test2` IS NULL AND `test2` != ?2)",
       [123, 456],
     ],
     [
       sql.select().where(sql.collate("test")),
-      "SELECT TRUE WHERE [test] COLLATE BINARY",
+      "SELECT TRUE WHERE `test` COLLATE BINARY",
       [],
     ],
     [
       sql.select().where(sql.collate("test", "NOCASE")),
-      "SELECT TRUE WHERE [test] COLLATE NOCASE",
+      "SELECT TRUE WHERE `test` COLLATE NOCASE",
       [],
     ],
     [sql.select().where(sql.raw("123!")), "SELECT TRUE WHERE 123!", []],
@@ -267,7 +269,7 @@ describe("class Builder", () => {
     ],
     [
       sql.select().where(sql.cast("test", "INTEGER")),
-      "SELECT TRUE WHERE CAST([test] AS INTEGER)",
+      "SELECT TRUE WHERE CAST(`test` AS INTEGER)",
       [],
     ],
     [
@@ -345,22 +347,22 @@ describe("class Builder", () => {
       "SELECT TRUE WHERE ?1",
       [1],
     ],
-    [sql.select().orderBy("id"), "SELECT TRUE ORDER BY [id]", []],
-    [sql.select().orderBy("id", "ASC"), "SELECT TRUE ORDER BY [id] ASC", []],
-    [sql.select().orderBy("id", "DESC"), "SELECT TRUE ORDER BY [id] DESC", []],
+    [sql.select().orderBy("id"), "SELECT TRUE ORDER BY `id`", []],
+    [sql.select().orderBy("id", "ASC"), "SELECT TRUE ORDER BY `id` ASC", []],
+    [sql.select().orderBy("id", "DESC"), "SELECT TRUE ORDER BY `id` DESC", []],
     [
       sql.select().orderBy("id", undefined, "NULLS FIRST"),
-      "SELECT TRUE ORDER BY [id] NULLS FIRST",
+      "SELECT TRUE ORDER BY `id` NULLS FIRST",
       [],
     ],
     [
       sql.select().orderBy("id", "DESC", "NULLS LAST"),
-      "SELECT TRUE ORDER BY [id] DESC NULLS LAST",
+      "SELECT TRUE ORDER BY `id` DESC NULLS LAST",
       [],
     ],
     [
       sql.select().orderBy(sql.collate("id", "NOCASE")),
-      "SELECT TRUE ORDER BY [id] COLLATE NOCASE",
+      "SELECT TRUE ORDER BY `id` COLLATE NOCASE",
       [],
     ],
     [
@@ -370,7 +372,7 @@ describe("class Builder", () => {
     ],
     [
       sql.select().orderBy(sql.call("IFNULL", "id", "index")),
-      "SELECT TRUE ORDER BY IFNULL([id], [index])",
+      "SELECT TRUE ORDER BY IFNULL(`id`, `index`)",
       [],
     ],
     [
@@ -378,7 +380,7 @@ describe("class Builder", () => {
         .select()
         .orderBy("id", undefined, "NULLS FIRST")
         .orderBy("name", "ASC"),
-      "SELECT TRUE ORDER BY [id] NULLS FIRST, [name] ASC",
+      "SELECT TRUE ORDER BY `id` NULLS FIRST, `name` ASC",
       [],
     ],
     [
@@ -390,18 +392,18 @@ describe("class Builder", () => {
         .orderBy("id", "DESC", "NULLS FIRST")
         .orderBy("name", "ASC")
         .limit(sql.staticValue(10), sql.value(20)),
-      "SELECT [id], [name] FROM [users] WHERE [name] = ?1 COLLATE NOCASE ORDER BY [id] DESC NULLS FIRST, [name] ASC LIMIT 10 OFFSET ?2",
+      "SELECT `id`, `name` FROM `users` WHERE `name` = ?1 COLLATE NOCASE ORDER BY `id` DESC NULLS FIRST, `name` ASC LIMIT 10 OFFSET ?2",
       ["John", 20],
     ],
-    [sql.update("test"), "UPDATE [test]", []],
+    [sql.update("test"), "UPDATE `test`", []],
     [
       sql.update("test").set("index", "123"),
-      "UPDATE [test] SET [index] = [123]",
+      "UPDATE `test` SET `index` = `123`",
       [],
     ],
     [
       sql.update("test").set("index", sql.value(123)),
-      "UPDATE [test] SET [index] = ?1",
+      "UPDATE `test` SET `index` = ?1",
       [123],
     ],
     [
@@ -411,10 +413,10 @@ describe("class Builder", () => {
         .where(sql.eq("test", sql.value("abc")))
         .limit(5)
         .offset(10),
-      "UPDATE [test] WHERE [index] = ?1 AND [test] = ?2 LIMIT 5 OFFSET 10",
+      "UPDATE `test` WHERE `index` = ?1 AND `test` = ?2 LIMIT 5 OFFSET 10",
       [123, "abc"],
     ],
-    [sql.delete("test"), "DELETE FROM [test]", []],
+    [sql.delete("test"), "DELETE FROM `test`", []],
     [
       sql
         .delete("test")
@@ -422,17 +424,17 @@ describe("class Builder", () => {
         .where(sql.eq("test", sql.jsonValue(123)))
         .limit(5)
         .offset(10),
-      "DELETE FROM [test] WHERE [index] = ?1 AND [test] = ?2 LIMIT 5 OFFSET 10",
+      "DELETE FROM `test` WHERE `index` = ?1 AND `test` = ?2 LIMIT 5 OFFSET 10",
       [123, "123"],
     ],
     [
       sql.insert("test", ["id", "name"]),
-      "INSERT INTO [test] ([id], [name])",
+      "INSERT INTO `test` (`id`, `name`)",
       [],
     ],
     [
       sql.insert("test", ["id", "name"]).values("index", sql.value(123)),
-      "INSERT INTO [test] ([id], [name]) VALUES ([index], ?1)",
+      "INSERT INTO `test` (`id`, `name`) VALUES (`index`, ?1)",
       [123],
     ],
     [
@@ -440,18 +442,18 @@ describe("class Builder", () => {
         .insert("test", ["id", "name"])
         .values("index", sql.value(123))
         .values(sql.eq("id", sql.value(456)), sql.staticValue(null)),
-      "INSERT INTO [test] ([id], [name]) VALUES ([index], ?1), ([id] = ?2, NULL)",
+      "INSERT INTO `test` (`id`, `name`) VALUES (`index`, ?1), (`id` = ?2, NULL)",
       [123, 456],
     ],
     [sql.case(), "CASE END", []],
-    [sql.case("test"), "CASE [test] END", []],
+    [sql.case("test"), "CASE `test` END", []],
     [
       sql
         .case("test")
         .when("index", sql.value(123))
         .when(sql.value(456), sql.staticValue(null))
         .else(sql.staticValue("else")),
-      'CASE [test] WHEN [index] THEN ?1 WHEN ?2 THEN NULL ELSE "else" END',
+      'CASE `test` WHEN `index` THEN ?1 WHEN ?2 THEN NULL ELSE "else" END',
       [123, 456],
     ],
     [
@@ -459,7 +461,7 @@ describe("class Builder", () => {
         .select("id")
         .selectAliased(sql.case("test").when("index", sql.value(123)), "test")
         .from("test"),
-      "SELECT [id], CASE [test] WHEN [index] THEN ?1 END AS [test] FROM [test]",
+      "SELECT `id`, CASE `test` WHEN `index` THEN ?1 END AS `test` FROM `test`",
       [123],
     ],
   ];
