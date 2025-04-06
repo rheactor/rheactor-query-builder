@@ -13,6 +13,8 @@ describe("class Builder", () => {
 
   const tests: Test[] = [
     [sql.select(), "SELECT TRUE", []],
+    [sql.select().distinct(), "SELECT DISTINCT TRUE", []],
+    [sql.select().distinct(false), "SELECT TRUE", []],
     [sql.select(false), "SELECT TRUE", []],
     [sql.select(undefined), "SELECT TRUE", []],
     [sql.select(false, "test"), "SELECT `test`", []],

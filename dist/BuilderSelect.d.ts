@@ -4,9 +4,11 @@ import { Builder } from "./Builder";
 type OrderDirection = "ASC" | "DESC";
 type OrderNulls = "NULLS FIRST" | "NULLS LAST";
 export declare class BuilderSelect extends Builder {
+    private selectDistinct;
     private readonly orders;
     select(...args: Parameters<Builder["internalColumn"]>): this;
     selectAliased(...args: Parameters<Builder["internalColumnAliased"]>): this;
+    distinct(mode?: boolean): this;
     from(...args: Parameters<Builder["internalTable"]>): this;
     fromAliased(...args: Parameters<Builder["internalTableAliased"]>): this;
     where(...args: Parameters<Builder["internalWhere"]>): this;

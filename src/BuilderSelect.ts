@@ -15,6 +15,8 @@ interface Order {
 }
 
 export class BuilderSelect extends Builder {
+  private selectDistinct = false;
+
   private readonly orders: Order[] = [];
 
   public select(...args: Parameters<Builder["internalColumn"]>) {
@@ -23,6 +25,12 @@ export class BuilderSelect extends Builder {
 
   public selectAliased(...args: Parameters<Builder["internalColumnAliased"]>) {
     return this.internalColumnAliased(...args);
+  }
+
+  public distinct(mode = true) {
+    this.selectDistinct = mode;
+
+    return this;
   }
 
   public from(...args: Parameters<Builder["internalTable"]>) {
@@ -57,6 +65,10 @@ export class BuilderSelect extends Builder {
 
   public override getOperations() {
     const operations: Operation[] = ["SELECT "];
+
+    if (this.selectDistinct) {
+      operations.push("DISTINCT ");
+    }
 
     if (this.columnsOperations.length === 0) {
       operations.push("TRUE ");
