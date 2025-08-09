@@ -137,13 +137,13 @@ export function operation(expression: Expression): Operation[] {
       return expression.argument === null
         ? ["NULL"]
         : expression.argument === true
-        ? ["TRUE"]
-        : expression.argument === false
-        ? ["FALSE"]
-        : typeof expression.argument === "number" ||
-          typeof expression.argument === "bigint"
-        ? [expression.argument.toString()]
-        : [JSON.stringify(expression.argument)];
+          ? ["TRUE"]
+          : expression.argument === false
+            ? ["FALSE"]
+            : typeof expression.argument === "number" ||
+                typeof expression.argument === "bigint"
+              ? [expression.argument.toString()]
+              : [JSON.stringify(expression.argument)];
 
     case "CALL": {
       return [

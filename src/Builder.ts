@@ -110,8 +110,8 @@ export abstract class Builder {
       typeof limit === "number"
         ? { type: "STATIC", argument: limit }
         : isFalseable(limit)
-        ? undefined
-        : limit;
+          ? undefined
+          : limit;
 
     if (arguments.length >= 2) {
       this.internalOffset(offset);
@@ -127,8 +127,8 @@ export abstract class Builder {
           ? undefined
           : { type: "STATIC", argument: offset }
         : isFalseable(offset)
-        ? undefined
-        : offset;
+          ? undefined
+          : offset;
 
     return this;
   }
