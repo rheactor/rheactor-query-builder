@@ -1,7 +1,7 @@
 import type { Builder } from "./Builder.js";
 import type { Cast } from "./types/Cast.js";
 import type { Collate } from "./types/Collate.js";
-import type { Expression } from "./types/Expression.js";
+import type { Expression, MathOperator } from "./types/Expression.js";
 import type { Falseable } from "./types/Falseable.js";
 import type { Identifier } from "./types/Identifier.js";
 import type { JsonValue } from "./types/JsonValue.js";
@@ -41,5 +41,6 @@ declare const functions: {
     staticValue(argument: ValueExtended): Expression;
     update(table: Identifier): BuilderUpdate;
     value(argument: Value): Expression;
+    op(operator: MathOperator, expressionA: Expression, expressionB: Expression): Expression;
 };
 export default functions;

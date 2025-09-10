@@ -470,6 +470,34 @@ describe("class Builder", () => {
       "SELECT `id`, CASE `test` WHEN `index` THEN ?1 END AS `test` FROM `test`",
       [123],
     ],
+    [
+      sql.select(
+        sql.op("+", sql.op("-", sql.value(1), sql.value(2)), sql.value(3)),
+      ),
+      "SELECT ((?1 - ?2) + ?3)",
+      [1, 2, 3],
+    ],
+    [
+      sql.select(
+        sql.op(
+          "*",
+          sql.op("/", sql.staticValue(1), sql.staticValue(2)),
+          sql.staticValue(3),
+        ),
+      ),
+      "SELECT ((1 / 2) * 3)",
+      [],
+    ],
+    [
+      sql.select(sql.op("%", sql.value(1), sql.staticValue(2))),
+      "SELECT (?1 % 2)",
+      [1],
+    ],
+    [
+      sql.select(sql.op("%", sql.staticValue(1), sql.value(2))),
+      "SELECT (1 % ?1)",
+      [2],
+    ],
   ];
 
   it.each(tests)(

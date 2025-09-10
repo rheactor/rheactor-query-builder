@@ -7,6 +7,8 @@ import type { JsonValue } from "@/types/JsonValue.js";
 import type { Value } from "@/types/Value.js";
 import type { ValueExtended } from "@/types/ValueExtended.js";
 
+export type MathOperator = "-" | "*" | "/" | "%" | "+";
+
 type ComparisonOperator = "!=" | "<" | "<=" | "=" | ">" | ">=";
 
 type LogicalOperator = "AND" | "OR";
@@ -19,6 +21,12 @@ export type Expression =
       identifier: Identifier;
       from: Expression;
       to: Expression;
+    }
+  | {
+      type: "OPERATOR";
+      operator: Operator;
+      expressionA: Expression;
+      expressionB: Expression;
     }
   | {
       type: LogicalOperator;

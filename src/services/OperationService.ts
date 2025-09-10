@@ -164,11 +164,20 @@ export function operation(expression: Expression): Operation[] {
       return ["EXISTS ( ", ...operation(expression.builder), ")"];
 
     case "SET":
-    default:
       return [
         ...operation(expression.identifier),
         " = ",
         ...operation(expression.expression),
+      ];
+
+    case "OPERATOR":
+    default:
+      return [
+        "(",
+        ...operation(expression.expressionA),
+        ` ${expression.operator} `,
+        ...operation(expression.expressionB),
+        ")",
       ];
   }
 }
