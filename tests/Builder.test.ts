@@ -101,8 +101,8 @@ describe("class Builder", () => {
           sql.eq("test1", sql.value(123)),
           sql.eq("test2", sql.value(123)),
         ),
-      "SELECT TRUE WHERE `test1` = ?1 AND `test2` = ?2",
-      [123, 123],
+      "SELECT TRUE WHERE `test1` = ?1 AND `test2` = ?1",
+      [123],
     ],
     [
       sql
@@ -151,8 +151,8 @@ describe("class Builder", () => {
     ],
     [
       sql.select().where(sql.between("test", sql.value(123), sql.value(123))),
-      "SELECT TRUE WHERE `test` BETWEEN ?1 AND ?2",
-      [123, 123],
+      "SELECT TRUE WHERE `test` BETWEEN ?1 AND ?1",
+      [123],
     ],
     [
       sql.select().where(sql.between("test", sql.value(123), sql.value(456))),
@@ -163,8 +163,8 @@ describe("class Builder", () => {
       sql
         .select()
         .where(sql.notBetween("test", sql.value(123), sql.value(123))),
-      "SELECT TRUE WHERE NOT `test` BETWEEN ?1 AND ?2",
-      [123, 123],
+      "SELECT TRUE WHERE NOT `test` BETWEEN ?1 AND ?1",
+      [123],
     ],
     [
       sql
@@ -223,8 +223,8 @@ describe("class Builder", () => {
           sql.or(sql.eq("test1", sql.value(123))),
           sql.and(sql.eq("test2", sql.value(123))),
         ),
-      "SELECT TRUE WHERE `test1` = ?1 AND `test2` = ?2",
-      [123, 123],
+      "SELECT TRUE WHERE `test1` = ?1 AND `test2` = ?1",
+      [123],
     ],
     [
       sql
@@ -497,6 +497,18 @@ describe("class Builder", () => {
       sql.select(sql.op("%", sql.staticValue(1), sql.value(2))),
       "SELECT (1 % ?1)",
       [2],
+    ],
+    [
+      sql.select(
+        sql.value(1),
+        sql.value(2),
+        sql.value(3),
+        sql.value(1),
+        sql.value(2),
+        sql.value(3),
+      ),
+      "SELECT ?1, ?2, ?3, ?1, ?2, ?3",
+      [1, 2, 3],
     ],
   ];
 

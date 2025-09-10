@@ -33,20 +33,23 @@ export abstract class Builder {
 
   public build() {
     const query: string[] = [];
-    const parameters: Value[] = [];
+    const parameters = new Map<Value, number>();
 
     for (const buildOperation of this.getOperations()) {
       if (typeof buildOperation === "string") {
         query.push(buildOperation);
       } else {
-        parameters.push(buildOperation.value);
-        query.push(`?${parameters.length}`);
+        if (!parameters.has(buildOperation.value)) {
+          parameters.set(buildOperation.value, parameters.size + 1);
+        }
+
+        query.push(`?${parameters.get(buildOperation.value)}`);
       }
     }
 
     return {
       query: query.join("").trimEnd(),
-      parameters,
+      parameters: [...parameters.keys()],
     };
   }
 
