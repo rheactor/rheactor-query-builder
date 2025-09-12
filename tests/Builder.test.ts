@@ -536,6 +536,41 @@ describe("class Builder", () => {
       [2],
     ],
     [
+      sql.select(sql.op("**", sql.staticValue(1), sql.value(2))),
+      "SELECT POW(1, ?1)",
+      [2],
+    ],
+    [
+      sql.select(sql.sum(sql.staticValue(1), sql.value(2))),
+      "SELECT (1 + ?1)",
+      [2],
+    ],
+    [
+      sql.select(sql.sub(sql.staticValue(1), sql.value(2))),
+      "SELECT (1 - ?1)",
+      [2],
+    ],
+    [
+      sql.select(sql.mul(sql.staticValue(1), sql.value(2))),
+      "SELECT (1 * ?1)",
+      [2],
+    ],
+    [
+      sql.select(sql.div(sql.staticValue(1), sql.value(2))),
+      "SELECT (1 / ?1)",
+      [2],
+    ],
+    [
+      sql.select(sql.mod(sql.staticValue(1), sql.value(2))),
+      "SELECT (1 % ?1)",
+      [2],
+    ],
+    [
+      sql.select(sql.pow(sql.staticValue(1), sql.value(2))),
+      "SELECT POW(1, ?1)",
+      [2],
+    ],
+    [
       sql.select(
         sql.value(1),
         sql.value(2),

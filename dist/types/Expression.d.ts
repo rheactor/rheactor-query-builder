@@ -6,7 +6,7 @@ import type { Identifier } from "./Identifier.js";
 import type { JsonValue } from "./JsonValue.js";
 import type { Value } from "./Value.js";
 import type { ValueExtended } from "./ValueExtended.js";
-export type MathOperator = "-" | "*" | "/" | "%" | "+";
+export type MathOperator = "-" | "*" | "**" | "/" | "%" | "+";
 type ComparisonOperator = "!=" | "<" | "<=" | "=" | ">" | ">=";
 type LogicalOperator = "AND" | "OR";
 export type Expression = Builder | Identifier | {

@@ -7,7 +7,7 @@ import type { JsonValue } from "@/types/JsonValue.js";
 import type { Value } from "@/types/Value.js";
 import type { ValueExtended } from "@/types/ValueExtended.js";
 
-export type MathOperator = "-" | "*" | "/" | "%" | "+";
+export type MathOperator = "-" | "*" | "**" | "/" | "%" | "+";
 
 type ComparisonOperator = "!=" | "<" | "<=" | "=" | ">" | ">=";
 

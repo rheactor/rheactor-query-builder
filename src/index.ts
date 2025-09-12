@@ -143,12 +143,33 @@ const functions = {
     expressionA: Expression,
     expressionB: Expression,
   ): Expression {
-    return {
-      type: "OPERATOR",
-      operator,
-      expressionA,
-      expressionB,
-    };
+    return operator === "**"
+      ? functions.call("POW", expressionA, expressionB)
+      : { type: "OPERATOR", operator, expressionA, expressionB };
+  },
+
+  sum(expressionA: Expression, expressionB: Expression) {
+    return functions.op("+", expressionA, expressionB);
+  },
+
+  sub(expressionA: Expression, expressionB: Expression) {
+    return functions.op("-", expressionA, expressionB);
+  },
+
+  mul(expressionA: Expression, expressionB: Expression) {
+    return functions.op("*", expressionA, expressionB);
+  },
+
+  div(expressionA: Expression, expressionB: Expression) {
+    return functions.op("/", expressionA, expressionB);
+  },
+
+  mod(expressionA: Expression, expressionB: Expression) {
+    return functions.op("%", expressionA, expressionB);
+  },
+
+  pow(expressionA: Expression, expressionB: Expression) {
+    return functions.call("POW", expressionA, expressionB);
   },
 };
 

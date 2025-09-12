@@ -43,5 +43,11 @@ declare const functions: {
     update(table: Identifier): BuilderUpdate;
     value(argument: Value): Expression;
     op(operator: MathOperator, expressionA: Expression, expressionB: Expression): Expression;
+    sum(expressionA: Expression, expressionB: Expression): Expression;
+    sub(expressionA: Expression, expressionB: Expression): Expression;
+    mul(expressionA: Expression, expressionB: Expression): Expression;
+    div(expressionA: Expression, expressionB: Expression): Expression;
+    mod(expressionA: Expression, expressionB: Expression): Expression;
+    pow(expressionA: Expression, expressionB: Expression): Expression;
 };
 export default functions;
