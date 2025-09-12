@@ -24,7 +24,7 @@ export type Expression =
     }
   | {
       type: "OPERATOR";
-      operator: Operator;
+      operator: MathOperator;
       expressionA: Expression;
       expressionB: Expression;
     }
