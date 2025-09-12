@@ -143,7 +143,7 @@ export function operation(expression: Expression): Operation[] {
             : typeof expression.argument === "number" ||
                 typeof expression.argument === "bigint"
               ? [expression.argument.toString()]
-              : [JSON.stringify(expression.argument)];
+              : [`"${expression.argument.replaceAll('"', '""')}"`];
 
     case "CALL": {
       return [

@@ -29,7 +29,8 @@ declare const functions: {
     isNull(identifier: Identifier): Expression;
     insert(table: Identifier, columns: Identifier[]): BuilderInsert;
     isNotNull(identifier: Identifier): Expression;
-    jsonValue(argument: JsonValue): Expression;
+    jsonValue(argument: JsonValue, nullAsSQL?: boolean): Expression;
+    jsonStaticValue(argument: JsonValue, nullAsSQL?: boolean): Expression;
     lt(sideA: Expression, sideB: Expression): Expression;
     lte(sideA: Expression, sideB: Expression): Expression;
     neq(sideA: Expression, sideB: Expression): Expression;

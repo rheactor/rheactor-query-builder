@@ -273,6 +273,37 @@ describe("class Builder", () => {
       "SELECT TRUE WHERE ?1",
       ['{"abc":123}'],
     ],
+    [sql.select().where(sql.jsonValue(null)), "SELECT TRUE WHERE ?1", ["null"]],
+    [
+      sql.select().where(sql.jsonValue(null, true)),
+      "SELECT TRUE WHERE ?1",
+      [null],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue(null)),
+      'SELECT TRUE WHERE "null"',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue(null, true)),
+      "SELECT TRUE WHERE NULL",
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue(123.456)),
+      'SELECT TRUE WHERE "123.456"',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue(true)),
+      'SELECT TRUE WHERE "true"',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue({ abc: 123 })),
+      'SELECT TRUE WHERE "{""abc"":123}"',
+      [],
+    ],
     [
       sql.select().where(sql.cast("test", "INTEGER")),
       "SELECT TRUE WHERE CAST(`test` AS INTEGER)",
@@ -328,6 +359,12 @@ describe("class Builder", () => {
     [sql.select().where(sql.staticValue("")), 'SELECT TRUE WHERE ""', []],
     [sql.select().where(sql.staticValue("123")), 'SELECT TRUE WHERE "123"', []],
     [sql.select().where(sql.staticValue(123)), "SELECT TRUE WHERE 123", []],
+    [sql.select().where(sql.staticValue('"')), 'SELECT TRUE WHERE """"', []],
+    [
+      sql.select().where(sql.staticValue(JSON.stringify({ hello: "world" }))),
+      'SELECT TRUE WHERE "{""hello"":""world""}"',
+      [],
+    ],
     [
       sql.select().where(sql.staticValue(123.456)),
       "SELECT TRUE WHERE 123.456",

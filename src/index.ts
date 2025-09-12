@@ -76,8 +76,18 @@ const functions = {
     return functions.not({ type: "IS NULL", identifier });
   },
 
-  jsonValue(argument: JsonValue): Expression {
-    return { type: "JSON", argument };
+  jsonValue(argument: JsonValue, nullAsSQL = false): Expression {
+    return nullAsSQL && argument === null
+      ? { type: "VALUE", argument }
+      : { type: "JSON", argument };
+  },
+
+  jsonStaticValue(argument: JsonValue, nullAsSQL = false): Expression {
+    return {
+      type: "STATIC",
+      argument:
+        nullAsSQL && argument === null ? null : JSON.stringify(argument),
+    };
   },
 
   lt(sideA: Expression, sideB: Expression): Expression {
