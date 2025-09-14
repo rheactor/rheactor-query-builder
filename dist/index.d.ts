@@ -8,6 +8,7 @@ import type { JsonValue } from "./types/JsonValue.js";
 import type { Value } from "./types/Value.js";
 import type { ValueExtended } from "./types/ValueExtended.js";
 import { BuilderCase } from "./BuilderCase";
+import { BuilderConflict } from "./BuilderConflict";
 import { BuilderDelete } from "./BuilderDelete";
 import { BuilderInsert } from "./BuilderInsert";
 import { BuilderSelect } from "./BuilderSelect";
@@ -41,6 +42,8 @@ declare const functions: {
     select(...columns: Array<Falseable<Expression>>): BuilderSelect;
     staticValue(argument: ValueExtended): Expression;
     update(table: Identifier): BuilderUpdate;
+    conflict(columns?: Identifier[], where?: Expression): BuilderConflict;
+    excluded(identifier: Identifier): Expression;
     value(argument: Value): Expression;
     op(operator: MathOperator, expressionA: Expression, expressionB: Expression): Expression;
     sum(expressionA: Expression, expressionB: Expression): Expression;

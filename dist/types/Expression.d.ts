@@ -36,6 +36,9 @@ export type Expression = Builder | Identifier | {
     expression: Expression;
     collate: Collate;
 } | {
+    type: "EXCLUDED";
+    identifier: Identifier;
+} | {
     type: "EXISTS";
     builder: Builder;
 } | {

@@ -62,6 +62,9 @@ export function operation(expression: Expression): Operation[] {
             ...operation(expression.alias),
           ];
 
+    case "EXCLUDED":
+      return ["`excluded`.", ...operation(expression.identifier)];
+
     case "AND":
     case "OR": {
       const operations: Operation[][] = [];

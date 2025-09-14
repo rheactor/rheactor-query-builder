@@ -582,6 +582,110 @@ describe("class Builder", () => {
       "SELECT ?1, ?2, ?3, ?1, ?2, ?3",
       [1, 2, 3],
     ],
+    [sql.conflict(["key"]).doNothing(), "ON CONFLICT (`key`) DO NOTHING", []],
+    [
+      sql
+        .conflict(
+          ["key", "test"],
+          sql.and(
+            sql.eq("key", sql.value(123)),
+            sql.eq("index", sql.value(123)),
+            sql.eq("test", sql.value(456)),
+          ),
+        )
+        .set("key", sql.value(123))
+        .set("index", sql.value(456))
+        .set("test", sql.value(789))
+        .where(
+          sql.eq("key", sql.value(123)),
+          sql.eq("index", sql.value(123)),
+          sql.eq("test", sql.value(456)),
+        ),
+      "ON CONFLICT (`key`, `test`) WHERE (`key` = ?1 AND `index` = ?1 AND `test` = ?2) DO UPDATE SET `key` = ?1, `index` = ?2, `test` = ?3 WHERE `key` = ?1 AND `index` = ?1 AND `test` = ?2",
+      [123, 456, 789],
+    ],
+    [
+      sql.insert("test", ["id"]).values(sql.value(123)).onConflictIgnore(),
+      "INSERT INTO `test` (`id`) VALUES (?1) ON CONFLICT DO NOTHING",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id"])
+        .values(sql.value(123))
+        .onConflict(alwaysFalse() && sql.conflict().doNothing()),
+      "INSERT INTO `test` (`id`) VALUES (?1)",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id"])
+        .values(sql.value(123))
+        .onConflict(sql.conflict().doNothing()),
+      "INSERT INTO `test` (`id`) VALUES (?1) ON CONFLICT DO NOTHING",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id"])
+        .values(sql.value(123))
+        .onConflict(sql.conflict(["id"]).doNothing()),
+      "INSERT INTO `test` (`id`) VALUES (?1) ON CONFLICT (`id`) DO NOTHING",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id"])
+        .values(sql.value(123))
+        .onConflict(sql.conflict(["id", "key"]).doNothing()),
+      "INSERT INTO `test` (`id`) VALUES (?1) ON CONFLICT (`id`, `key`) DO NOTHING",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id"])
+        .values(sql.value(123))
+        .onConflict(
+          sql.conflict(["id"], sql.eq("id", sql.value(123))).doNothing(),
+        ),
+      "INSERT INTO `test` (`id`) VALUES (?1) ON CONFLICT (`id`) WHERE `id` = ?1 DO NOTHING",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id"])
+        .values(sql.value(123))
+        .onConflict(
+          sql
+            .conflict(["id"])
+            .set("id", sql.value(123))
+            .set("key", sql.staticValue(456))
+            .where(sql.eq("id", sql.value(123)))
+            .where(alwaysFalse() && sql.eq("key", sql.staticValue(456))),
+        ),
+      "INSERT INTO `test` (`id`) VALUES (?1) ON CONFLICT (`id`) DO UPDATE SET `id` = ?1, `key` = 456 WHERE `id` = ?1",
+      [123],
+    ],
+    [sql.select(sql.excluded("id")), "SELECT `excluded`.`id`", []],
+    [
+      sql
+        .insert("test", ["id"])
+        .values(sql.value(123))
+        .onConflict(
+          sql.conflict(["phone"]).set("phone", sql.excluded("phone")),
+        ),
+      "INSERT INTO `test` (`id`) VALUES (?1) ON CONFLICT (`phone`) DO UPDATE SET `phone` = `excluded`.`phone`",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id", "key"])
+        .values(sql.value(123), sql.value(456))
+        .onConflict(sql.conflict(["id"]).set("id", sql.excluded("id")))
+        .onConflict(sql.conflict(["key"]).set("key", sql.excluded("key"))),
+      "INSERT INTO `test` (`id`, `key`) VALUES (?1, ?2) ON CONFLICT (`id`) DO UPDATE SET `id` = `excluded`.`id` ON CONFLICT (`key`) DO UPDATE SET `key` = `excluded`.`key`",
+      [123, 456],
+    ],
   ];
 
   it.each(tests)(

@@ -2,11 +2,15 @@ import { joinOperations, operation } from "@/services/OperationService.js";
 import type { Operation } from "@/types/Operation.js";
 
 import type { Expression } from "@/types/Expression";
+import type { Falseable } from "@/types/Falseable";
 import type { Identifier } from "@/types/Identifier";
 
 import { Builder } from "@/Builder";
+import { BuilderConflict } from "@/BuilderConflict";
 
 export class BuilderInsert extends Builder {
+  private readonly onConflictBuilders: BuilderConflict[] = [];
+
   public constructor(table: Identifier, columns: Identifier[]) {
     super();
 
@@ -16,6 +20,22 @@ export class BuilderInsert extends Builder {
 
   public values(...values: Expression[]) {
     this.valuesOperations.push(values.map((value) => operation(value)));
+
+    return this;
+  }
+
+  public onConflict(conflict: Falseable<BuilderConflict>) {
+    if (conflict instanceof BuilderConflict) {
+      this.onConflictBuilders.push(conflict);
+    }
+
+    return this;
+  }
+
+  public onConflictIgnore(columns?: Identifier[], where?: Expression) {
+    this.onConflictBuilders.push(
+      new BuilderConflict(columns, where).doNothing(),
+    );
 
     return this;
   }
@@ -43,6 +63,14 @@ export class BuilderInsert extends Builder {
             false,
           ),
         );
+      }
+
+      if (this.onConflictBuilders.length) {
+        operations.push(" ");
+
+        for (const onConflictBuilder of this.onConflictBuilders) {
+          operations.push(...onConflictBuilder.getOperations());
+        }
       }
     }
 

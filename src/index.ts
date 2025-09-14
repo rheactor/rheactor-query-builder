@@ -9,6 +9,7 @@ import type { Value } from "@/types/Value.js";
 import type { ValueExtended } from "@/types/ValueExtended.js";
 
 import { BuilderCase } from "@/BuilderCase";
+import { BuilderConflict } from "@/BuilderConflict";
 import { BuilderDelete } from "@/BuilderDelete";
 import { BuilderInsert } from "@/BuilderInsert";
 import { BuilderSelect } from "@/BuilderSelect";
@@ -132,6 +133,14 @@ const functions = {
 
   update(table: Identifier) {
     return new BuilderUpdate(table);
+  },
+
+  conflict(columns?: Identifier[], where?: Expression) {
+    return new BuilderConflict(columns, where);
+  },
+
+  excluded(identifier: Identifier): Expression {
+    return { type: "EXCLUDED", identifier };
   },
 
   value(argument: Value): Expression {

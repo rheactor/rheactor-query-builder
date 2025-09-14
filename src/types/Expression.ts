@@ -36,6 +36,7 @@ export type Expression =
   | { type: "CALL"; identifier: Identifier; functionArguments: Expression[] }
   | { type: "CAST"; expression: Expression; cast: Cast }
   | { type: "COLLATE"; expression: Expression; collate: Collate }
+  | { type: "EXCLUDED"; identifier: Identifier }
   | { type: "EXISTS"; builder: Builder }
   | { type: "IDENTIFIER"; identifier: Expression; alias?: Identifier }
   | { type: "IS NULL"; identifier: Identifier }
