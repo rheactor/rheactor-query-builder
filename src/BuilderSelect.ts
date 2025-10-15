@@ -2,8 +2,10 @@ import { joinOperations, operation } from "@/services/OperationService.js";
 import type { Operation } from "@/types/Operation.js";
 
 import type { Expression } from "@/types/Expression";
+import type { Falseable } from "@/types/Falseable";
 
 import { Builder } from "@/Builder";
+import { isFalseable } from "@/services/FalseableService";
 
 type OrderDirection = "ASC" | "DESC";
 type OrderNulls = "NULLS FIRST" | "NULLS LAST";
@@ -18,6 +20,8 @@ export class BuilderSelect extends Builder {
   private selectDistinct = false;
 
   private readonly orders: Order[] = [];
+
+  private readonly groupByColumns: Expression[] = [];
 
   public select(...args: Parameters<Builder["internalColumn"]>) {
     return this.internalColumn(...args);
@@ -53,6 +57,16 @@ export class BuilderSelect extends Builder {
     return this.internalOffset(...args);
   }
 
+  public groupBy(...expressions: Array<Falseable<Expression>>) {
+    for (const expression of expressions) {
+      if (!isFalseable(expression)) {
+        this.groupByColumns.push(expression);
+      }
+    }
+
+    return this;
+  }
+
   public orderBy(
     expression: Expression,
     direction?: OrderDirection,
@@ -81,6 +95,19 @@ export class BuilderSelect extends Builder {
 
     this.generateFromOperation(operations);
     this.generateWhereOperation(operations);
+
+    if (this.groupByColumns.length > 0) {
+      operations.push(
+        "GROUP BY ",
+        ...joinOperations(
+          this.groupByColumns.map((column) => operation(column)),
+          ", ",
+          false,
+        ),
+        " ",
+      );
+    }
+
     this.generateOrderByOperation(operations);
     this.generateLimitOperation(operations);
     this.generateOffsetOperation(operations);

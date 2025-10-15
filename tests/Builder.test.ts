@@ -686,6 +686,48 @@ describe("class Builder", () => {
       "INSERT INTO `test` (`id`, `key`) VALUES (?1, ?2) ON CONFLICT (`id`) DO UPDATE SET `id` = `excluded`.`id` ON CONFLICT (`key`) DO UPDATE SET `key` = `excluded`.`key`",
       [123, 456],
     ],
+    [
+      sql.select("category").from("products").groupBy("category"),
+      "SELECT `category` FROM `products` GROUP BY `category`",
+      [],
+    ],
+    [
+      sql
+        .select("category", "brand")
+        .from("products")
+        .groupBy("category", "brand"),
+      "SELECT `category`, `brand` FROM `products` GROUP BY `category`, `brand`",
+      [],
+    ],
+    [
+      sql.select("category").from("products").groupBy("category").limit(10),
+      "SELECT `category` FROM `products` GROUP BY `category` LIMIT 10",
+      [],
+    ],
+    [
+      sql
+        .select("category")
+        .from("products")
+        .groupBy(sql.cast("category", "TEXT")),
+      "SELECT `category` FROM `products` GROUP BY CAST(`category` AS TEXT)",
+      [],
+    ],
+    [
+      sql
+        .select("category")
+        .from("products")
+        .groupBy(sql.call("UPPER", "category")),
+      "SELECT `category` FROM `products` GROUP BY UPPER(`category`)",
+      [],
+    ],
+    [
+      sql
+        .select("category")
+        .from("products")
+        .groupBy("category", false, "brand"),
+      "SELECT `category` FROM `products` GROUP BY `category`, `brand`",
+      [],
+    ],
   ];
 
   it.each(tests)(
