@@ -23,6 +23,8 @@ export class BuilderSelect extends Builder {
 
   private readonly groupByColumns: Expression[] = [];
 
+  private readonly havingExpressions: Expression[] = [];
+
   public select(...args: Parameters<Builder["internalColumn"]>) {
     return this.internalColumn(...args);
   }
@@ -47,6 +49,16 @@ export class BuilderSelect extends Builder {
 
   public where(...args: Parameters<Builder["internalWhere"]>) {
     return this.internalWhere(...args);
+  }
+
+  public having(...expressions: Array<Falseable<Expression>>) {
+    for (const expression of expressions) {
+      if (!isFalseable(expression)) {
+        this.havingExpressions.push(expression);
+      }
+    }
+
+    return this;
   }
 
   public limit(...args: Parameters<Builder["internalLimit"]>) {
@@ -108,14 +120,18 @@ export class BuilderSelect extends Builder {
       );
     }
 
-    this.generateOrderByOperation(operations);
-    this.generateLimitOperation(operations);
-    this.generateOffsetOperation(operations);
+    if (this.havingExpressions.length > 0) {
+      operations.push(
+        "HAVING ",
+        ...operation({
+          type: "AND",
+          expressions: this.havingExpressions,
+          includeParens: false,
+        }),
+        " ",
+      );
+    }
 
-    return operations;
-  }
-
-  private generateOrderByOperation(operations: Operation[]) {
     if (this.orders.length > 0) {
       operations.push(
         "ORDER BY ",
@@ -131,5 +147,10 @@ export class BuilderSelect extends Builder {
         " ",
       );
     }
+
+    this.generateLimitOperation(operations);
+    this.generateOffsetOperation(operations);
+
+    return operations;
   }
 }

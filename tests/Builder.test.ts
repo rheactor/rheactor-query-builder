@@ -728,6 +728,28 @@ describe("class Builder", () => {
       "SELECT `category` FROM `products` GROUP BY `category`, `brand`",
       [],
     ],
+    [sql.select().having(false), "SELECT TRUE", []],
+    [sql.select().having(sql.value(123)), "SELECT TRUE HAVING ?1", [123]],
+    [
+      sql.select().having(sql.eq("test1", "test2")),
+      "SELECT TRUE HAVING `test1` = `test2`",
+      [],
+    ],
+    [
+      sql.select().having(sql.eq("test", sql.value(123))),
+      "SELECT TRUE HAVING `test` = ?1",
+      [123],
+    ],
+    [
+      sql
+        .select()
+        .having(
+          sql.eq("test1", sql.value(123)),
+          sql.eq("test2", sql.value(123)),
+        ),
+      "SELECT TRUE HAVING `test1` = ?1 AND `test2` = ?1",
+      [123],
+    ],
   ];
 
   it.each(tests)(

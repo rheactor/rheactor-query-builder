@@ -8,17 +8,18 @@ export declare class BuilderSelect extends Builder {
     private selectDistinct;
     private readonly orders;
     private readonly groupByColumns;
+    private readonly havingExpressions;
     select(...args: Parameters<Builder["internalColumn"]>): this;
     selectAliased(...args: Parameters<Builder["internalColumnAliased"]>): this;
     distinct(mode?: boolean): this;
     from(...args: Parameters<Builder["internalTable"]>): this;
     fromAliased(...args: Parameters<Builder["internalTableAliased"]>): this;
     where(...args: Parameters<Builder["internalWhere"]>): this;
+    having(...expressions: Array<Falseable<Expression>>): this;
     limit(...args: Parameters<Builder["internalLimit"]>): this;
     offset(...args: Parameters<Builder["internalOffset"]>): this;
     groupBy(...expressions: Array<Falseable<Expression>>): this;
     orderBy(expression: Expression, direction?: OrderDirection, nulls?: OrderNulls): this;
     getOperations(): Operation[];
-    private generateOrderByOperation;
 }
 export {};
