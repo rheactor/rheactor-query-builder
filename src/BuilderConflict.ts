@@ -59,11 +59,7 @@ export class BuilderConflict extends Builder {
       }
     }
 
-    if (this.conflictDoNothing) {
-      operations.push("DO NOTHING");
-    } else {
-      operations.push("DO UPDATE ");
-    }
+    operations.push(this.conflictDoNothing ? "DO NOTHING" : "DO UPDATE ");
 
     this.generateSetOperation(operations);
     this.generateWhereOperation(operations);

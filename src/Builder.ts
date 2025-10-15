@@ -148,8 +148,11 @@ export abstract class Builder {
 
   protected generateSetOperation(operations: Operation[]) {
     if (this.setsOperations.length > 0) {
-      operations.push("SET ");
-      operations.push(...joinOperations(this.setsOperations, ", ", false), " ");
+      operations.push(
+        "SET ",
+        ...joinOperations(this.setsOperations, ", ", false),
+        " ",
+      );
     }
   }
 

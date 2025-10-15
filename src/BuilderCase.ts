@@ -44,8 +44,7 @@ export class BuilderCase extends Builder {
     }
 
     if (this.expressionElse !== undefined) {
-      operations.push("ELSE ");
-      operations.push(...operation(this.expressionElse), " ");
+      operations.push("ELSE ", ...operation(this.expressionElse), " ");
     }
 
     operations.push("END");

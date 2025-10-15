@@ -117,9 +117,8 @@ export class BuilderSelect extends Builder {
 
   private generateOrderByOperation(operations: Operation[]) {
     if (this.orders.length > 0) {
-      operations.push("ORDER BY ");
-
       operations.push(
+        "ORDER BY ",
         ...joinOperations(
           this.orders.map((order) => [
             ...operation(order.expression),
@@ -129,9 +128,8 @@ export class BuilderSelect extends Builder {
           ", ",
           false,
         ),
+        " ",
       );
-
-      operations.push(" ");
     }
   }
 }

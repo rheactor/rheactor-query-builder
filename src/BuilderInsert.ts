@@ -52,9 +52,8 @@ export class BuilderInsert extends Builder {
       );
 
       if (this.valuesOperations.length > 0) {
-        operations.push("VALUES ");
-
         operations.push(
+          "VALUES ",
           ...joinOperations(
             this.valuesOperations.flatMap((values) => [
               joinOperations(values, ", ", true),
