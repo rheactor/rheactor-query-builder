@@ -9,17 +9,15 @@ function customCall(identifier: string, ...functionArguments: Expression[]) {
 // @ref https://www.sqlite.org/lang_corefunc.html
 function call(identifier: "ABS", value: Expression): Expression;
 function call(identifier: "CHANGES"): Expression;
+// Grouped scalar function overloads by common signatures
 function call(identifier: "CHAR", ...characters: Expression[]): Expression;
-function call(identifier: "COALESCE", ...expressions: Expression[]): Expression;
-function call(identifier: "CONCAT", ...expressions: Expression[]): Expression;
 function call(
-  identifier: "CONCAT_WS",
-  separator: Expression,
+  identifier: "COALESCE" | "CONCAT" | "PRINTF",
   ...expressions: Expression[]
 ): Expression;
 function call(
-  identifier: "FORMAT",
-  format: Expression,
+  identifier: "CONCAT_WS" | "FORMAT",
+  separatorOrFormat: Expression,
   ...expressions: Expression[]
 ): Expression;
 function call(
@@ -27,9 +25,27 @@ function call(
   pattern: Expression,
   value: Expression,
 ): Expression;
-function call(identifier: "HEX", value: Expression): Expression;
 function call(
-  identifier: "IFNULL",
+  identifier:
+    | "HEX"
+    | "LENGTH"
+    | "QUOTE"
+    | "SIGN"
+    | "SOUNDEX"
+    | "TYPEOF"
+    | "UNICODE"
+    | "UNHEX"
+    | "UNISTR"
+    | "UNISTR_QUOTE",
+  value: Expression,
+): Expression;
+function call(
+  identifier: "UNHEX",
+  value: Expression,
+  escapes: Expression,
+): Expression;
+function call(
+  identifier: "IFNULL" | "NULLIF",
   valueA: Expression,
   valueB: Expression,
 ): Expression;
@@ -42,8 +58,6 @@ function call(
   valueA: Expression,
   valueB: Expression,
 ): Expression;
-function call(identifier: "LAST_INSERT_ROWID"): Expression;
-function call(identifier: "LENGTH", value: Expression): Expression;
 function call(
   identifier: "LIKE",
   pattern: Expression,
@@ -60,32 +74,33 @@ function call(
   valueA: Expression,
   valueB: Expression,
 ): Expression;
-function call(identifier: "LIKELY", value: Expression): Expression;
+function call(identifier: "LIKELY" | "UNLIKELY", value: Expression): Expression;
 function call(identifier: "LOAD_EXTENSION", name: Expression): Expression;
 function call(
   identifier: "LOAD_EXTENSION",
   name: Expression,
   entryPoint: Expression,
 ): Expression;
-function call(identifier: "LOWER", value: Expression): Expression;
-function call(identifier: "LTRIM", value: Expression): Expression;
 function call(
-  identifier: "LTRIM",
+  identifier: "LOWER" | "LTRIM" | "RTRIM" | "TRIM" | "UPPER",
+  value: Expression,
+): Expression;
+function call(
+  identifier: "LTRIM" | "RTRIM" | "TRIM",
   value: Expression,
   character: Expression,
 ): Expression;
-function call(identifier: "MAX", ...expressions: Expression[]): Expression;
-function call(identifier: "MIN", ...expressions: Expression[]): Expression;
 function call(
-  identifier: "NULLIF",
-  valueA: Expression,
-  valueB: Expression,
+  identifier: "MAX" | "MIN",
+  ...expressions: Expression[]
 ): Expression;
-function call(identifier: "OCTET_LENGTH", value: Expression): Expression;
-function call(identifier: "PRINTF", ...expressions: Expression[]): Expression;
-function call(identifier: "QUOTE", value: Expression): Expression;
-function call(identifier: "RANDOM"): Expression;
-function call(identifier: "RANDOMBLOB", size: Expression): Expression;
+function call(
+  identifier: "OCTET_LENGTH" | "RANDOMBLOB" | "ZEROBLOB",
+  size: Expression,
+): Expression;
+function call(
+  identifier: "RANDOM" | "LAST_INSERT_ROWID" | "TOTAL_CHANGES",
+): Expression;
 function call(
   identifier: "REPLACE",
   value: Expression,
@@ -98,25 +113,12 @@ function call(
   value: Expression,
   digits: Expression,
 ): Expression;
-function call(identifier: "RTRIM", value: Expression): Expression;
 function call(
-  identifier: "RTRIM",
-  value: Expression,
-  character: Expression,
-): Expression;
-function call(identifier: "SIGN", value: Expression): Expression;
-function call(identifier: "SOUNDEX", value: Expression): Expression;
-function call(
-  identifier: "SQLITE_COMPILEOPTION_GET",
-  option: Expression,
-): Expression;
-function call(
-  identifier: "SQLITE_COMPILEOPTION_USED",
+  identifier: "SQLITE_COMPILEOPTION_GET" | "SQLITE_COMPILEOPTION_USED",
   option: Expression,
 ): Expression;
 function call(identifier: "SQLITE_OFFSET", column: Identifier): Expression;
-function call(identifier: "SQLITE_SOURCE_ID"): Expression;
-function call(identifier: "SQLITE_VERSION"): Expression;
+function call(identifier: "SQLITE_SOURCE_ID" | "SQLITE_VERSION"): Expression;
 function call(
   identifier: "SUBSTR" | "SUBSTRING",
   value: Expression,
@@ -128,24 +130,7 @@ function call(
   position: Expression,
   length: Expression,
 ): Expression;
-function call(identifier: "TOTAL_CHANGES"): Expression;
-function call(identifier: "TRIM", value: Expression): Expression;
-function call(
-  identifier: "TRIM",
-  value: Expression,
-  character: Expression,
-): Expression;
-function call(identifier: "TYPEOF", value: Expression): Expression;
-function call(identifier: "UNHEX", value: Expression): Expression;
-function call(
-  identifier: "UNHEX",
-  value: Expression,
-  escapes: Expression,
-): Expression;
-function call(identifier: "UNICODE", value: Expression): Expression;
-function call(identifier: "UNLIKELY", value: Expression): Expression;
-function call(identifier: "UPPER", value: Expression): Expression;
-function call(identifier: "ZEROBLOB", size: Expression): Expression;
+// (REPLACE already declared above)
 
 // Built-In Mathematical SQL Functions
 // @ref https://www.sqlite.org/lang_mathfunc.html
@@ -291,6 +276,8 @@ function call(
   identifier: "AVG" | "COUNT" | "MAX" | "MIN" | "SUM" | "TOTAL",
   value: Expression,
 ): Expression;
+// allow count() / count(*) style invocation (no-arg)
+function call(identifier: "COUNT"): Expression;
 function call(
   identifier: "GROUP_CONCAT" | "STRING_AGG",
   value: Expression,
