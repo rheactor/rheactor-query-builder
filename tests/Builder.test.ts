@@ -750,6 +750,21 @@ describe("class Builder", () => {
       "SELECT TRUE HAVING `test1` = ?1 AND `test2` = ?1",
       [123],
     ],
+    [
+      sql.select(sql.call("COUNT", "*")).from("products"),
+      "SELECT COUNT(*) FROM `products`",
+      [],
+    ],
+    [
+      sql.select(sql.call("COUNT", "id")).from("products"),
+      "SELECT COUNT(`id`) FROM `products`",
+      [],
+    ],
+    [
+      sql.select(sql.call("COUNT", sql.value(1))).from("products"),
+      "SELECT COUNT(?1) FROM `products`",
+      [1],
+    ],
   ];
 
   it.each(tests)(

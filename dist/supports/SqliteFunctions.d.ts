@@ -93,6 +93,9 @@ declare function call(identifier: "JSON_VALID", json: Expression, flags: Express
 declare function call(identifier: "JSON_QUOTE", value: Expression): Expression;
 declare function call(identifier: "JSON_GROUP_ARRAY" | "JSONB_GROUP_ARRAY", value: Expression): Expression;
 declare function call(identifier: "JSON_GROUP_OBJECT" | "JSONB_GROUP_OBJECT", label: Expression, value: Expression): Expression;
+declare function call(identifier: "AVG" | "COUNT" | "MAX" | "MIN" | "SUM" | "TOTAL", value: Expression): Expression;
+declare function call(identifier: "GROUP_CONCAT" | "STRING_AGG", value: Expression): Expression;
+declare function call(identifier: "GROUP_CONCAT" | "STRING_AGG", value: Expression, separator: Expression): Expression;
 declare function call(identifier: "JSON_EACH", json: Expression): Expression;
 declare function call(identifier: "JSON_EACH", json: Expression, path: Expression): Expression;
 declare function call(identifier: "JSON_TREE", json: Expression): Expression;

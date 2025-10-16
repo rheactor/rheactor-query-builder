@@ -285,6 +285,22 @@ function call(
   value: Expression,
 ): Expression;
 
+// Built-In Aggregate Functions.
+// @ref https://sqlite.org/lang_aggfunc.html
+function call(
+  identifier: "AVG" | "COUNT" | "MAX" | "MIN" | "SUM" | "TOTAL",
+  value: Expression,
+): Expression;
+function call(
+  identifier: "GROUP_CONCAT" | "STRING_AGG",
+  value: Expression,
+): Expression;
+function call(
+  identifier: "GROUP_CONCAT" | "STRING_AGG",
+  value: Expression,
+  separator: Expression,
+): Expression;
+
 function call(identifier: "JSON_EACH", json: Expression): Expression;
 function call(
   identifier: "JSON_EACH",
