@@ -38,6 +38,7 @@ export class BuilderUpdate extends Builder {
 
     operations.push(...joinOperations(this.tablesOperations, ", ", false), " ");
 
+    this.generateJoinOperations(operations);
     this.generateSetOperation(operations);
     this.generateWhereOperation(operations);
     this.generateLimitOperation(operations);

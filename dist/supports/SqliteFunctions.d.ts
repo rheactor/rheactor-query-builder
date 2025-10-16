@@ -11,7 +11,7 @@ declare function call(identifier: "CHAR", ...characters: Expression[]): Expressi
 declare function call(identifier: "COALESCE" | "CONCAT" | "PRINTF", ...expressions: Expression[]): Expression;
 declare function call(identifier: "CONCAT_WS" | "FORMAT", separatorOrFormat: Expression, ...expressions: Expression[]): Expression;
 declare function call(identifier: "GLOB", pattern: Expression, value: Expression): Expression;
-declare function call(identifier: "HEX" | "LENGTH" | "QUOTE" | "SIGN" | "SOUNDEX" | "TYPEOF" | "UNICODE" | "UNHEX" | "UNISTR" | "UNISTR_QUOTE", value: Expression): Expression;
+declare function call(identifier: "HEX" | "LENGTH" | "QUOTE" | "SIGN" | "SOUNDEX" | "TYPEOF" | "UNHEX" | "UNICODE" | "UNISTR_QUOTE" | "UNISTR", value: Expression): Expression;
 declare function call(identifier: "UNHEX", value: Expression, escapes: Expression): Expression;
 declare function call(identifier: "IFNULL" | "NULLIF", valueA: Expression, valueB: Expression): Expression;
 declare function call(identifier: "IF" | "IIF", ...expressions: Expression[]): Expression;
@@ -26,7 +26,7 @@ declare function call(identifier: "LOWER" | "LTRIM" | "RTRIM" | "TRIM" | "UPPER"
 declare function call(identifier: "LTRIM" | "RTRIM" | "TRIM", value: Expression, character: Expression): Expression;
 declare function call(identifier: "MAX" | "MIN", ...expressions: Expression[]): Expression;
 declare function call(identifier: "OCTET_LENGTH" | "RANDOMBLOB" | "ZEROBLOB", size: Expression): Expression;
-declare function call(identifier: "RANDOM" | "LAST_INSERT_ROWID" | "TOTAL_CHANGES"): Expression;
+declare function call(identifier: "LAST_INSERT_ROWID" | "RANDOM" | "TOTAL_CHANGES"): Expression;
 declare function call(identifier: "REPLACE", value: Expression, search: Expression, replaceBy: Expression): Expression;
 declare function call(identifier: "ROUND", value: Expression): Expression;
 declare function call(identifier: "ROUND", value: Expression, digits: Expression): Expression;

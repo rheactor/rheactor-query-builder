@@ -4,6 +4,7 @@ import type { Value } from "@/types/Value.js";
 import type { Expression } from "@/types/Expression";
 import type { Falseable } from "@/types/Falseable";
 import type { Identifier } from "@/types/Identifier";
+import type { JoinClause } from "@/types/Join";
 
 import { isFalseable } from "@/services/FalseableService";
 import { joinOperations, operation } from "@/services/OperationService";
@@ -18,6 +19,8 @@ export abstract class Builder {
   protected readonly valuesOperations: Operation[][][] = [];
 
   private readonly wheresExpressions: Expression[] = [];
+
+  private readonly joins: JoinClause[] = [];
 
   private limitExpression?: Expression;
 
@@ -51,6 +54,16 @@ export abstract class Builder {
       query: query.join("").trimEnd(),
       parameters: [...parameters.keys()],
     };
+  }
+
+  public join(
+    table: Identifier,
+    alias: Identifier,
+    ...conditions: Expression[]
+  ) {
+    this.joins.push({ type: "INNER", table, alias, conditions });
+
+    return this;
   }
 
   protected internalColumn(...columns: Array<Falseable<Expression>>) {
@@ -143,6 +156,28 @@ export abstract class Builder {
         ...joinOperations(this.tablesOperations, ", ", false),
         " ",
       );
+    }
+  }
+
+  protected generateJoinOperations(operations: Operation[]) {
+    for (const join of this.joins) {
+      operations.push(
+        `${join.type} JOIN `,
+        ...operation({
+          type: "IDENTIFIER",
+          identifier: join.table,
+          alias: join.alias,
+        }),
+        " ",
+      );
+
+      if (join.conditions.length > 0) {
+        operations.push(
+          "ON ",
+          ...operation({ type: "AND", expressions: join.conditions }),
+          " ",
+        );
+      }
     }
   }
 

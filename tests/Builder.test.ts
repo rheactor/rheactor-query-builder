@@ -765,6 +765,41 @@ describe("class Builder", () => {
       "SELECT COUNT(?1) FROM `products`",
       [1],
     ],
+    [
+      sql
+        .select("u.name", "p.title")
+        .fromAliased("users", "u")
+        .join("posts", "p"),
+      "SELECT `u`.`name`, `p`.`title` FROM `users` AS `u` INNER JOIN `posts` AS `p`",
+      [],
+    ],
+    [
+      sql
+        .select("u.name", "p.title")
+        .fromAliased("users", "u")
+        .join(
+          "posts",
+          "p",
+          sql.eq("p.user_id", "u.id"),
+          sql.eq("p.active", sql.value(true)),
+        ),
+      "SELECT `u`.`name`, `p`.`title` FROM `users` AS `u` INNER JOIN `posts` AS `p` ON (`p`.`user_id` = `u`.`id` AND `p`.`active` = ?1)",
+      [1],
+    ],
+    [
+      sql.delete("users").join("posts", "p", sql.eq("p.user_id", "users.id")),
+      "DELETE FROM `users` INNER JOIN `posts` AS `p` ON `p`.`user_id` = `users`.`id`",
+      [],
+    ],
+    [
+      sql
+        .update("users")
+        .join("posts", "p", sql.eq("p.user_id", "users.id"))
+        .set("users.active", sql.value(false))
+        .where(sql.eq("p.status", sql.value("deleted"))),
+      "UPDATE `users` INNER JOIN `posts` AS `p` ON `p`.`user_id` = `users`.`id` SET `users`.`active` = ?1 WHERE `p`.`status` = ?2",
+      [0, "deleted"],
+    ],
   ];
 
   it.each(tests)(

@@ -33,10 +33,10 @@ function call(
     | "SIGN"
     | "SOUNDEX"
     | "TYPEOF"
-    | "UNICODE"
     | "UNHEX"
-    | "UNISTR"
-    | "UNISTR_QUOTE",
+    | "UNICODE"
+    | "UNISTR_QUOTE"
+    | "UNISTR",
   value: Expression,
 ): Expression;
 function call(
@@ -99,7 +99,7 @@ function call(
   size: Expression,
 ): Expression;
 function call(
-  identifier: "RANDOM" | "LAST_INSERT_ROWID" | "TOTAL_CHANGES",
+  identifier: "LAST_INSERT_ROWID" | "RANDOM" | "TOTAL_CHANGES",
 ): Expression;
 function call(
   identifier: "REPLACE",

@@ -29,6 +29,7 @@ export class BuilderDelete extends Builder {
 
     operations.push(...joinOperations(this.tablesOperations, ", ", false), " ");
 
+    this.generateJoinOperations(operations);
     this.generateWhereOperation(operations);
     this.generateLimitOperation(operations);
     this.generateOffsetOperation(operations);

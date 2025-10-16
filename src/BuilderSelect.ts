@@ -106,6 +106,7 @@ export class BuilderSelect extends Builder {
     }
 
     this.generateFromOperation(operations);
+    this.generateJoinOperations(operations);
     this.generateWhereOperation(operations);
 
     if (this.groupByColumns.length > 0) {
