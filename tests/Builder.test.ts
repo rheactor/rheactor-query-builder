@@ -836,6 +836,26 @@ describe("class Builder", () => {
       "SELECT `id`, `name` FROM `users` UNION ( SELECT `id`, `name` FROM `admins` UNION SELECT `id`, `name` FROM `sellers` UNION SELECT `id`, `name` FROM `buyers` )",
       [],
     ],
+    [
+      sql.unionAll(
+        sql.select("id", "name").from("users"),
+        sql.select("id", "name").from("admins"),
+      ),
+      "SELECT `id`, `name` FROM `users` UNION ALL SELECT `id`, `name` FROM `admins`",
+      [],
+    ],
+    [
+      sql.unionAll(
+        sql.select("id", "name").from("users"),
+        sql.unionAll(
+          sql.select("id", "name").from("admins"),
+          sql.select("id", "name").from("sellers"),
+          sql.select("id", "name").from("buyers"),
+        ),
+      ),
+      "SELECT `id`, `name` FROM `users` UNION ALL ( SELECT `id`, `name` FROM `admins` UNION ALL SELECT `id`, `name` FROM `sellers` UNION ALL SELECT `id`, `name` FROM `buyers` )",
+      [],
+    ],
   ];
 
   it.each(tests)(

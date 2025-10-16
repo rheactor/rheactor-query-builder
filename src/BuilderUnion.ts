@@ -4,7 +4,10 @@ import type { Expression } from "@/types/Expression.js";
 import type { Operation } from "@/types/Operation.js";
 
 export class BuilderUnion extends Builder {
-  public constructor(private readonly queries: Expression[]) {
+  public constructor(
+    private readonly queries: Expression[],
+    private readonly unionType: "UNION ALL" | "UNION" = "UNION",
+  ) {
     super();
   }
 
@@ -13,7 +16,7 @@ export class BuilderUnion extends Builder {
 
     for (const query of this.queries) {
       if (operations.length > 0) {
-        operations.push("UNION ");
+        operations.push(`${this.unionType} `);
       }
 
       if (query instanceof BuilderUnion) {

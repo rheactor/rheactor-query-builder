@@ -136,6 +136,10 @@ const functions = {
     return new BuilderUnion(queries);
   },
 
+  unionAll(...queries: Expression[]): BuilderUnion {
+    return new BuilderUnion(queries, "UNION ALL");
+  },
+
   update(table: Identifier) {
     return new BuilderUpdate(table);
   },

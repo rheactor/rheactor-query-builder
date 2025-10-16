@@ -43,6 +43,7 @@ declare const functions: {
     select(...columns: Array<Falseable<Expression>>): BuilderSelect;
     staticValue(argument: ValueExtended): Expression;
     union(...queries: Expression[]): BuilderUnion;
+    unionAll(...queries: Expression[]): BuilderUnion;
     update(table: Identifier): BuilderUpdate;
     conflict(columns?: Identifier[], where?: Expression): BuilderConflict;
     excluded(identifier: Identifier): Expression;
