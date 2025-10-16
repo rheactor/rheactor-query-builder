@@ -856,6 +856,46 @@ describe("class Builder", () => {
       "SELECT `id`, `name` FROM `users` UNION ALL ( SELECT `id`, `name` FROM `admins` UNION ALL SELECT `id`, `name` FROM `sellers` UNION ALL SELECT `id`, `name` FROM `buyers` )",
       [],
     ],
+    [
+      sql.intersect(
+        sql.select("id", "name").from("users"),
+        sql.select("id", "name").from("admins"),
+      ),
+      "SELECT `id`, `name` FROM `users` INTERSECT SELECT `id`, `name` FROM `admins`",
+      [],
+    ],
+    [
+      sql.intersect(
+        sql.select("id", "name").from("users"),
+        sql.intersect(
+          sql.select("id", "name").from("admins"),
+          sql.select("id", "name").from("sellers"),
+          sql.select("id", "name").from("buyers"),
+        ),
+      ),
+      "SELECT `id`, `name` FROM `users` INTERSECT ( SELECT `id`, `name` FROM `admins` INTERSECT SELECT `id`, `name` FROM `sellers` INTERSECT SELECT `id`, `name` FROM `buyers` )",
+      [],
+    ],
+    [
+      sql.except(
+        sql.select("id", "name").from("users"),
+        sql.select("id", "name").from("admins"),
+      ),
+      "SELECT `id`, `name` FROM `users` EXCEPT SELECT `id`, `name` FROM `admins`",
+      [],
+    ],
+    [
+      sql.except(
+        sql.select("id", "name").from("users"),
+        sql.except(
+          sql.select("id", "name").from("admins"),
+          sql.select("id", "name").from("sellers"),
+          sql.select("id", "name").from("buyers"),
+        ),
+      ),
+      "SELECT `id`, `name` FROM `users` EXCEPT ( SELECT `id`, `name` FROM `admins` EXCEPT SELECT `id`, `name` FROM `sellers` EXCEPT SELECT `id`, `name` FROM `buyers` )",
+      [],
+    ],
   ];
 
   it.each(tests)(

@@ -13,7 +13,7 @@ import { BuilderConflict } from "@/BuilderConflict";
 import { BuilderDelete } from "@/BuilderDelete";
 import { BuilderInsert } from "@/BuilderInsert";
 import { BuilderSelect } from "@/BuilderSelect";
-import { BuilderUnion } from "@/BuilderUnion";
+import { BuilderSetOperation } from "@/BuilderSetOperation";
 import { BuilderUpdate } from "@/BuilderUpdate";
 import { call, customCall } from "@/supports/SqliteFunctions";
 
@@ -132,12 +132,20 @@ const functions = {
     return { type: "STATIC", argument };
   },
 
-  union(...queries: Expression[]): BuilderUnion {
-    return new BuilderUnion(queries);
+  union(...queries: Expression[]): BuilderSetOperation {
+    return new BuilderSetOperation(queries);
   },
 
-  unionAll(...queries: Expression[]): BuilderUnion {
-    return new BuilderUnion(queries, "UNION ALL");
+  unionAll(...queries: Expression[]): BuilderSetOperation {
+    return new BuilderSetOperation(queries, "UNION ALL");
+  },
+
+  intersect(...queries: Expression[]): BuilderSetOperation {
+    return new BuilderSetOperation(queries, "INTERSECT");
+  },
+
+  except(...queries: Expression[]): BuilderSetOperation {
+    return new BuilderSetOperation(queries, "EXCEPT");
   },
 
   update(table: Identifier) {

@@ -1,1 +1,0 @@
-import{Builder as e}from"./Builder.js";import{operation as i}from"./services/OperationService.js";export class BuilderUnion extends e{constructor(e,i="UNION"){super(),this.queries=e,this.unionType=i}getOperations(){let e=[];for(let r of this.queries)e.length>0&&e.push(`${this.unionType} `),r instanceof BuilderUnion?e.push("( ",...i(r),")"):e.push(...i(r));return e}}
