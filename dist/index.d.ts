@@ -12,6 +12,7 @@ import { BuilderConflict } from "./BuilderConflict";
 import { BuilderDelete } from "./BuilderDelete";
 import { BuilderInsert } from "./BuilderInsert";
 import { BuilderSelect } from "./BuilderSelect";
+import { BuilderUnion } from "./BuilderUnion";
 import { BuilderUpdate } from "./BuilderUpdate";
 import { call, customCall } from "./supports/SqliteFunctions";
 declare const functions: {
@@ -41,6 +42,7 @@ declare const functions: {
     raw(expression: string): Expression;
     select(...columns: Array<Falseable<Expression>>): BuilderSelect;
     staticValue(argument: ValueExtended): Expression;
+    union(...queries: Expression[]): BuilderUnion;
     update(table: Identifier): BuilderUpdate;
     conflict(columns?: Identifier[], where?: Expression): BuilderConflict;
     excluded(identifier: Identifier): Expression;

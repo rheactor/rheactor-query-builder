@@ -13,6 +13,7 @@ import { BuilderConflict } from "@/BuilderConflict";
 import { BuilderDelete } from "@/BuilderDelete";
 import { BuilderInsert } from "@/BuilderInsert";
 import { BuilderSelect } from "@/BuilderSelect";
+import { BuilderUnion } from "@/BuilderUnion";
 import { BuilderUpdate } from "@/BuilderUpdate";
 import { call, customCall } from "@/supports/SqliteFunctions";
 
@@ -129,6 +130,10 @@ const functions = {
 
   staticValue(argument: ValueExtended): Expression {
     return { type: "STATIC", argument };
+  },
+
+  union(...queries: Expression[]): BuilderUnion {
+    return new BuilderUnion(queries);
   },
 
   update(table: Identifier) {

@@ -816,6 +816,26 @@ describe("class Builder", () => {
       "UPDATE `users` INNER JOIN `posts` AS `p` ON `p`.`user_id` = `users`.`id` SET `users`.`active` = ?1 WHERE `p`.`status` = ?2",
       [0, "deleted"],
     ],
+    [
+      sql.union(
+        sql.select("id", "name").from("users"),
+        sql.select("id", "name").from("admins"),
+      ),
+      "SELECT `id`, `name` FROM `users` UNION SELECT `id`, `name` FROM `admins`",
+      [],
+    ],
+    [
+      sql.union(
+        sql.select("id", "name").from("users"),
+        sql.union(
+          sql.select("id", "name").from("admins"),
+          sql.select("id", "name").from("sellers"),
+          sql.select("id", "name").from("buyers"),
+        ),
+      ),
+      "SELECT `id`, `name` FROM `users` UNION ( SELECT `id`, `name` FROM `admins` UNION SELECT `id`, `name` FROM `sellers` UNION SELECT `id`, `name` FROM `buyers` )",
+      [],
+    ],
   ];
 
   it.each(tests)(
