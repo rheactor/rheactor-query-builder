@@ -1,7 +1,7 @@
 import type { Expression } from "@/types/Expression";
 import type { Identifier } from "@/types/Identifier";
 
-export type JoinType = "INNER";
+export type JoinType = "INNER" | "LEFT";
 
 export interface JoinClause {
   type: JoinType;

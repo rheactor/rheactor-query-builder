@@ -18,6 +18,7 @@ export declare abstract class Builder {
         parameters: Value[];
     };
     join(table: Identifier, alias: Identifier, ...conditions: Expression[]): this;
+    joinLeft(table: Identifier, alias: Identifier, ...conditions: Expression[]): this;
     protected internalColumn(...columns: Array<Falseable<Expression>>): this;
     protected internalColumnAliased(identifier: Falseable<Expression>, alias?: Identifier): this;
     protected internalTable(...tables: Array<Falseable<Identifier>>): this;

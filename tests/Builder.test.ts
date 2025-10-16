@@ -777,6 +777,22 @@ describe("class Builder", () => {
       sql
         .select("u.name", "p.title")
         .fromAliased("users", "u")
+        .joinLeft("posts", "p"),
+      "SELECT `u`.`name`, `p`.`title` FROM `users` AS `u` LEFT JOIN `posts` AS `p`",
+      [],
+    ],
+    [
+      sql
+        .select("u.name", "p.title")
+        .fromAliased("users", "u")
+        .joinLeft("posts", "p", sql.eq("p.user_id", "u.id")),
+      "SELECT `u`.`name`, `p`.`title` FROM `users` AS `u` LEFT JOIN `posts` AS `p` ON `p`.`user_id` = `u`.`id`",
+      [],
+    ],
+    [
+      sql
+        .select("u.name", "p.title")
+        .fromAliased("users", "u")
         .join(
           "posts",
           "p",

@@ -66,6 +66,16 @@ export abstract class Builder {
     return this;
   }
 
+  public joinLeft(
+    table: Identifier,
+    alias: Identifier,
+    ...conditions: Expression[]
+  ) {
+    this.joins.push({ type: "LEFT", table, alias, conditions });
+
+    return this;
+  }
+
   protected internalColumn(...columns: Array<Falseable<Expression>>) {
     for (const column of columns) {
       this.internalColumnAliased(column);
