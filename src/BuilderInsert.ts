@@ -85,10 +85,8 @@ export class BuilderInsert extends Builder {
         );
       }
 
-      if (this.onConflictBuilders.length) {
-        for (const onConflictBuilder of this.onConflictBuilders) {
-          operations.push(...onConflictBuilder.getOperations());
-        }
+      for (const onConflictBuilder of this.onConflictBuilders) {
+        operations.push(...onConflictBuilder.getOperations());
       }
     }
 

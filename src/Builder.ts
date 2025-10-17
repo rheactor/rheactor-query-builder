@@ -120,14 +120,21 @@ export abstract class Builder {
     return this;
   }
 
-  protected internalWhere(...expressions: Array<Falseable<Expression>>) {
+  protected internalExpressions(
+    target: Expression[],
+    ...expressions: Array<Falseable<Expression>>
+  ) {
     for (const expression of expressions) {
       if (!isFalseable(expression)) {
-        this.wheresExpressions.push(expression);
+        target.push(expression);
       }
     }
 
     return this;
+  }
+
+  protected internalWhere(...expressions: Array<Falseable<Expression>>) {
+    return this.internalExpressions(this.wheresExpressions, ...expressions);
   }
 
   protected internalLimit(
@@ -210,16 +217,14 @@ export abstract class Builder {
   }
 
   protected generateWhereOperation(operations: Operation[]) {
-    if (this.wheresExpressions.length > 0) {
-      const whereOperations = operation({
-        type: "AND",
-        expressions: this.wheresExpressions,
-        includeParens: false,
-      });
+    const whereOperations = operation({
+      type: "AND",
+      expressions: this.wheresExpressions,
+      includeParens: false,
+    });
 
-      if (whereOperations.length > 0) {
-        operations.push("WHERE ", ...whereOperations, " ");
-      }
+    if (whereOperations.length > 0) {
+      operations.push("WHERE ", ...whereOperations, " ");
     }
   }
 

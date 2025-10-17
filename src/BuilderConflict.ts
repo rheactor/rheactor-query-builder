@@ -2,13 +2,12 @@ import { joinOperations, operation } from "@/services/OperationService.js";
 import type { Operation } from "@/types/Operation.js";
 
 import type { Expression } from "@/types/Expression";
-import type { Falseable } from "@/types/Falseable";
 import type { Identifier } from "@/types/Identifier";
 
 import { Builder } from "@/Builder";
 
 export class BuilderConflict extends Builder {
-  private readonly conflictWheresExpressions: Falseable<Expression> | undefined;
+  private readonly conflictWhereExpression?: Expression;
 
   private conflictDoNothing = false;
 
@@ -16,7 +15,7 @@ export class BuilderConflict extends Builder {
     super();
 
     this.internalColumn(...columns);
-    this.conflictWheresExpressions = where;
+    this.conflictWhereExpression = where;
   }
 
   public doNothing() {
@@ -47,16 +46,12 @@ export class BuilderConflict extends Builder {
       );
     }
 
-    if (this.conflictWheresExpressions !== undefined) {
-      const whereOperations = operation({
-        type: "AND",
-        expressions: [this.conflictWheresExpressions],
-        includeParens: false,
-      });
-
-      if (whereOperations.length > 0) {
-        operations.push("WHERE ", ...whereOperations, " ");
-      }
+    if (this.conflictWhereExpression !== undefined) {
+      operations.push(
+        "WHERE ",
+        ...operation(this.conflictWhereExpression),
+        " ",
+      );
     }
 
     operations.push(this.conflictDoNothing ? "DO NOTHING" : "DO UPDATE ");

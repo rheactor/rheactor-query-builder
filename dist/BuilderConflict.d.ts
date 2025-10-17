@@ -3,7 +3,7 @@ import type { Expression } from "./types/Expression";
 import type { Identifier } from "./types/Identifier";
 import { Builder } from "./Builder";
 export declare class BuilderConflict extends Builder {
-    private readonly conflictWheresExpressions;
+    private readonly conflictWhereExpression?;
     private conflictDoNothing;
     constructor(columns?: Identifier[], where?: Expression);
     doNothing(): this;

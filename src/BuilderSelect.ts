@@ -5,7 +5,6 @@ import type { Expression } from "@/types/Expression";
 import type { Falseable } from "@/types/Falseable";
 
 import { Builder } from "@/Builder";
-import { isFalseable } from "@/services/FalseableService";
 
 type OrderDirection = "ASC" | "DESC";
 type OrderNulls = "NULLS FIRST" | "NULLS LAST";
@@ -52,13 +51,7 @@ export class BuilderSelect extends Builder {
   }
 
   public having(...expressions: Array<Falseable<Expression>>) {
-    for (const expression of expressions) {
-      if (!isFalseable(expression)) {
-        this.havingExpressions.push(expression);
-      }
-    }
-
-    return this;
+    return this.internalExpressions(this.havingExpressions, ...expressions);
   }
 
   public limit(...args: Parameters<Builder["internalLimit"]>) {
@@ -70,13 +63,7 @@ export class BuilderSelect extends Builder {
   }
 
   public groupBy(...expressions: Array<Falseable<Expression>>) {
-    for (const expression of expressions) {
-      if (!isFalseable(expression)) {
-        this.groupByColumns.push(expression);
-      }
-    }
-
-    return this;
+    return this.internalExpressions(this.groupByColumns, ...expressions);
   }
 
   public orderBy(

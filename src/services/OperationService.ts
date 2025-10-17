@@ -9,11 +9,17 @@ export function joinOperations(
   joiner: string,
   includeParens: boolean,
 ) {
-  const joinedOperations = operations
-    .filter((innerOperations) => innerOperations.length > 0)
-    .flatMap((innerOperations) => [...innerOperations, joiner]);
+  const joinedOperations: Operation[] = [];
 
-  joinedOperations.pop();
+  for (const innerOperations of operations) {
+    if (innerOperations.length > 0) {
+      if (joinedOperations.length > 0) {
+        joinedOperations.push(joiner);
+      }
+
+      joinedOperations.push(...innerOperations);
+    }
+  }
 
   return includeParens ? ["(", ...joinedOperations, ")"] : joinedOperations;
 }

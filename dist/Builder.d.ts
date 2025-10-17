@@ -24,6 +24,7 @@ export declare abstract class Builder {
     protected internalColumnAliased(identifier: Falseable<Expression>, alias?: Identifier): this;
     protected internalTable(...tables: Array<Falseable<Identifier>>): this;
     protected internalTableAliased(table: Falseable<Expression>, alias?: Identifier): this;
+    protected internalExpressions(target: Expression[], ...expressions: Array<Falseable<Expression>>): this;
     protected internalWhere(...expressions: Array<Falseable<Expression>>): this;
     protected internalLimit(limit: Falseable<Expression> | number, offset?: Falseable<Expression> | number): this;
     protected internalOffset(offset: Falseable<Expression> | number): this;
