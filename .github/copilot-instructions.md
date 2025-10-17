@@ -64,6 +64,8 @@ A type-safe SQL query builder for SQLite that generates parameterized queries us
   - Run `pnpm prettier:fix` (if available in package.json)
   - Run `pnpm eslint:fix` (if available in package.json)
   - Verify that fixes were applied successfully
+  - Verify dead-code removal
+  - Verify and guarantee coverage 100%
   - Run `pnpm build` when ready to compile the project
 
 ## Code Style Guidelines
