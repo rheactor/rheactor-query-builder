@@ -10,6 +10,7 @@ export declare abstract class Builder {
     protected readonly valuesOperations: Operation[][][];
     private readonly wheresExpressions;
     private readonly joins;
+    private readonly returningIdentifiers;
     private limitExpression?;
     private offsetExpression?;
     conditional(condition: boolean, then: (builder: this) => void): this;
@@ -26,11 +27,13 @@ export declare abstract class Builder {
     protected internalWhere(...expressions: Array<Falseable<Expression>>): this;
     protected internalLimit(limit: Falseable<Expression> | number, offset?: Falseable<Expression> | number): this;
     protected internalOffset(offset: Falseable<Expression> | number): this;
+    protected internalReturning(...expressions: Expression[]): this;
     protected generateFromOperation(operations: Operation[]): void;
     protected generateJoinOperations(operations: Operation[]): void;
     protected generateSetOperation(operations: Operation[]): void;
     protected generateWhereOperation(operations: Operation[]): void;
     protected generateLimitOperation(operations: Operation[]): void;
     protected generateOffsetOperation(operations: Operation[]): void;
+    protected generateReturningOperation(operations: Operation[]): void;
     abstract getOperations(): Operation[];
 }

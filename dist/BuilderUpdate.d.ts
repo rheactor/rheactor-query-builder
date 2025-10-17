@@ -8,5 +8,6 @@ export declare class BuilderUpdate extends Builder {
     where(...args: Parameters<Builder["internalWhere"]>): this;
     limit(...args: Parameters<Builder["internalLimit"]>): this;
     offset(...args: Parameters<Builder["internalOffset"]>): this;
+    returning(...expressions: Expression[]): this;
     getOperations(): Operation[];
 }

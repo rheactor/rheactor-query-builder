@@ -50,6 +50,10 @@ export class BuilderInsert extends Builder {
     return this;
   }
 
+  public returning(...expressions: Expression[]) {
+    return this.internalReturning(...expressions);
+  }
+
   public override getOperations() {
     const operations: Operation[] = ["INSERT "];
 
@@ -77,12 +81,11 @@ export class BuilderInsert extends Builder {
             ", ",
             false,
           ),
+          " ",
         );
       }
 
       if (this.onConflictBuilders.length) {
-        operations.push(" ");
-
         for (const onConflictBuilder of this.onConflictBuilders) {
           operations.push(...onConflictBuilder.getOperations());
         }
@@ -92,6 +95,7 @@ export class BuilderInsert extends Builder {
     this.generateWhereOperation(operations);
     this.generateLimitOperation(operations);
     this.generateOffsetOperation(operations);
+    this.generateReturningOperation(operations);
 
     return operations;
   }

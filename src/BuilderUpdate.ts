@@ -33,6 +33,10 @@ export class BuilderUpdate extends Builder {
     return this.internalOffset(...args);
   }
 
+  public returning(...expressions: Expression[]) {
+    return this.internalReturning(...expressions);
+  }
+
   public override getOperations() {
     const operations: Operation[] = ["UPDATE "];
 
@@ -43,6 +47,7 @@ export class BuilderUpdate extends Builder {
     this.generateWhereOperation(operations);
     this.generateLimitOperation(operations);
     this.generateOffsetOperation(operations);
+    this.generateReturningOperation(operations);
 
     return operations;
   }

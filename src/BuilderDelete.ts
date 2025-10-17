@@ -1,6 +1,7 @@
 import { joinOperations } from "@/services/OperationService.js";
 import type { Operation } from "@/types/Operation.js";
 
+import type { Expression } from "@/types/Expression";
 import type { Identifier } from "@/types/Identifier";
 
 import { Builder } from "@/Builder";
@@ -24,6 +25,10 @@ export class BuilderDelete extends Builder {
     return this.internalOffset(...args);
   }
 
+  public returning(...expressions: Expression[]) {
+    return this.internalReturning(...expressions);
+  }
+
   public override getOperations() {
     const operations: Operation[] = ["DELETE FROM "];
 
@@ -33,6 +38,7 @@ export class BuilderDelete extends Builder {
     this.generateWhereOperation(operations);
     this.generateLimitOperation(operations);
     this.generateOffsetOperation(operations);
+    this.generateReturningOperation(operations);
 
     return operations;
   }

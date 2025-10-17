@@ -921,6 +921,74 @@ describe("class Builder", () => {
       "INSERT OR ROLLBACK INTO `test` (`id`) VALUES (?1)",
       [123],
     ],
+    [
+      sql.insert("test", ["id"]).values(sql.value(123)).returning("id"),
+      "INSERT INTO `test` (`id`) VALUES (?1) RETURNING `id`",
+      [123],
+    ],
+    [
+      sql
+        .insert("test", ["id", "name"])
+        .values(sql.value(123), sql.value("John"))
+        .returning("id", "name"),
+      "INSERT INTO `test` (`id`, `name`) VALUES (?1, ?2) RETURNING `id`, `name`",
+      [123, "John"],
+    ],
+    [
+      sql
+        .insert("test", ["id", "name"])
+        .values(sql.value(123), sql.value("John"))
+        .returning(sql.call("LOWER", "name")),
+      "INSERT INTO `test` (`id`, `name`) VALUES (?1, ?2) RETURNING LOWER(`name`)",
+      [123, "John"],
+    ],
+    [
+      sql.update("test").set("name", sql.value("John")).returning("id"),
+      "UPDATE `test` SET `name` = ?1 RETURNING `id`",
+      ["John"],
+    ],
+    [
+      sql
+        .update("test")
+        .set("name", sql.value("John"))
+        .where(sql.eq("id", sql.value(1)))
+        .returning("id", "name"),
+      "UPDATE `test` SET `name` = ?1 WHERE `id` = ?2 RETURNING `id`, `name`",
+      ["John", 1],
+    ],
+    [
+      sql
+        .update("test")
+        .set("name", sql.value("John"))
+        .where(sql.eq("id", sql.value(1)))
+        .returning(sql.call("LOWER", "name")),
+      "UPDATE `test` SET `name` = ?1 WHERE `id` = ?2 RETURNING LOWER(`name`)",
+      ["John", 1],
+    ],
+    [
+      sql
+        .delete("test")
+        .where(sql.eq("id", sql.value(1)))
+        .returning("id"),
+      "DELETE FROM `test` WHERE `id` = ?1 RETURNING `id`",
+      [1],
+    ],
+    [
+      sql
+        .delete("test")
+        .where(sql.eq("id", sql.value(1)))
+        .returning("id", "name", "created_at"),
+      "DELETE FROM `test` WHERE `id` = ?1 RETURNING `id`, `name`, `created_at`",
+      [1],
+    ],
+    [
+      sql
+        .delete("test")
+        .where(sql.eq("id", sql.value(1)))
+        .returning(sql.call("LOWER", "name")),
+      "DELETE FROM `test` WHERE `id` = ?1 RETURNING LOWER(`name`)",
+      [1],
+    ],
   ];
 
   it.each(tests)(

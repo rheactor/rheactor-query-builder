@@ -22,6 +22,8 @@ export abstract class Builder {
 
   private readonly joins: JoinClause[] = [];
 
+  private readonly returningIdentifiers: Expression[] = [];
+
   private limitExpression?: Expression;
 
   private offsetExpression?: Expression;
@@ -159,6 +161,12 @@ export abstract class Builder {
     return this;
   }
 
+  protected internalReturning(...expressions: Expression[]) {
+    this.returningIdentifiers.push(...expressions);
+
+    return this;
+  }
+
   protected generateFromOperation(operations: Operation[]) {
     if (this.tablesOperations.length > 0) {
       operations.push(
@@ -224,6 +232,19 @@ export abstract class Builder {
   protected generateOffsetOperation(operations: Operation[]) {
     if (this.offsetExpression !== undefined) {
       operations.push("OFFSET ", ...operation(this.offsetExpression), " ");
+    }
+  }
+
+  protected generateReturningOperation(operations: Operation[]) {
+    if (this.returningIdentifiers.length > 0) {
+      operations.push(
+        "RETURNING ",
+        ...joinOperations(
+          this.returningIdentifiers.map((identifier) => operation(identifier)),
+          ", ",
+          false,
+        ),
+      );
     }
   }
 

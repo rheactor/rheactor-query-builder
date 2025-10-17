@@ -13,6 +13,7 @@ export declare class BuilderInsert extends Builder {
     onConflict(conflict: Falseable<BuilderConflict>): this;
     onConflictIgnore(columns?: Identifier[], where?: Expression): this;
     orClause(clause: OrClause): this;
+    returning(...expressions: Expression[]): this;
     getOperations(): Operation[];
 }
 export {};
