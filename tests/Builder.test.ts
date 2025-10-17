@@ -896,6 +896,31 @@ describe("class Builder", () => {
       "SELECT `id`, `name` FROM `users` EXCEPT ( SELECT `id`, `name` FROM `admins` EXCEPT SELECT `id`, `name` FROM `sellers` EXCEPT SELECT `id`, `name` FROM `buyers` )",
       [],
     ],
+    [
+      sql.insert("test", ["id"]).values(sql.value(123)).orClause("IGNORE"),
+      "INSERT OR IGNORE INTO `test` (`id`) VALUES (?1)",
+      [123],
+    ],
+    [
+      sql.insert("test", ["id"]).values(sql.value(123)).orClause("FAIL"),
+      "INSERT OR FAIL INTO `test` (`id`) VALUES (?1)",
+      [123],
+    ],
+    [
+      sql.insert("test", ["id"]).values(sql.value(123)).orClause("ABORT"),
+      "INSERT OR ABORT INTO `test` (`id`) VALUES (?1)",
+      [123],
+    ],
+    [
+      sql.insert("test", ["id"]).values(sql.value(123)).orClause("REPLACE"),
+      "INSERT OR REPLACE INTO `test` (`id`) VALUES (?1)",
+      [123],
+    ],
+    [
+      sql.insert("test", ["id"]).values(sql.value(123)).orClause("ROLLBACK"),
+      "INSERT OR ROLLBACK INTO `test` (`id`) VALUES (?1)",
+      [123],
+    ],
   ];
 
   it.each(tests)(

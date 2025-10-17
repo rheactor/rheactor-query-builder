@@ -8,8 +8,12 @@ import type { Identifier } from "@/types/Identifier";
 import { Builder } from "@/Builder";
 import { BuilderConflict } from "@/BuilderConflict";
 
+type OrClause = "ABORT" | "FAIL" | "IGNORE" | "REPLACE" | "ROLLBACK";
+
 export class BuilderInsert extends Builder {
   private readonly onConflictBuilders: BuilderConflict[] = [];
+
+  private orClauseValue?: OrClause;
 
   public constructor(table: Identifier, columns: Identifier[]) {
     super();
@@ -40,8 +44,20 @@ export class BuilderInsert extends Builder {
     return this;
   }
 
+  public orClause(clause: OrClause) {
+    this.orClauseValue = clause;
+
+    return this;
+  }
+
   public override getOperations() {
-    const operations: Operation[] = ["INSERT INTO "];
+    const operations: Operation[] = ["INSERT "];
+
+    if (this.orClauseValue !== undefined) {
+      operations.push("OR ", this.orClauseValue, " ");
+    }
+
+    operations.push("INTO ");
 
     if (this.tablesOperations.length > 0) {
       operations.push(
