@@ -23,6 +23,11 @@ export type Expression =
       to: Expression;
     }
   | {
+      type: "LIKE" | "MATCH" | "SET";
+      identifier: Identifier;
+      expression: Expression;
+    }
+  | {
       type: "OPERATOR";
       operator: MathOperator;
       expressionA: Expression;
@@ -41,7 +46,6 @@ export type Expression =
   | { type: "IDENTIFIER"; identifier: Expression; alias?: Identifier }
   | { type: "IS NULL"; identifier: Identifier }
   | { type: "JSON"; argument: JsonValue }
-  | { type: "MATCH" | "SET"; identifier: Identifier; expression: Expression }
   | { type: "NOT"; expression: Expression }
   | { type: "RAW"; expression: string }
   | { type: "STATIC"; argument: ValueExtended }

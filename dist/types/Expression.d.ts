@@ -15,6 +15,10 @@ export type Expression = Builder | Identifier | {
     from: Expression;
     to: Expression;
 } | {
+    type: "LIKE" | "MATCH" | "SET";
+    identifier: Identifier;
+    expression: Expression;
+} | {
     type: "OPERATOR";
     operator: MathOperator;
     expressionA: Expression;
@@ -51,10 +55,6 @@ export type Expression = Builder | Identifier | {
 } | {
     type: "JSON";
     argument: JsonValue;
-} | {
-    type: "MATCH" | "SET";
-    identifier: Identifier;
-    expression: Expression;
 } | {
     type: "NOT";
     expression: Expression;

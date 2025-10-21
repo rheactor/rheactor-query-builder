@@ -184,6 +184,16 @@ describe("class Builder", () => {
       [],
     ],
     [
+      sql.select().where(sql.like("name", sql.value("%John%"))),
+      "SELECT TRUE WHERE `name` LIKE ?1",
+      ["%John%"],
+    ],
+    [
+      sql.select().where(sql.not(sql.like("name", sql.value("%John%")))),
+      "SELECT TRUE WHERE NOT `name` LIKE ?1",
+      ["%John%"],
+    ],
+    [
       sql.select().where(sql.match("content", sql.value("search_term"))),
       "SELECT TRUE WHERE `content` MATCH ?1",
       ["search_term"],

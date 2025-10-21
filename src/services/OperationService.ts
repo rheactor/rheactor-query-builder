@@ -111,6 +111,17 @@ export function operation(expression: Expression): Operation[] {
       return [...operation(expression.identifier), " IS NULL"];
     }
 
+    case "LIKE":
+    case "MATCH": {
+      return [
+        ...operation(expression.identifier),
+        " ",
+        expression.type,
+        " ",
+        ...operation(expression.expression),
+      ];
+    }
+
     case "BETWEEN": {
       return [
         ...operation(expression.identifier),
@@ -176,13 +187,6 @@ export function operation(expression: Expression): Operation[] {
       return [
         ...operation(expression.identifier),
         " = ",
-        ...operation(expression.expression),
-      ];
-
-    case "MATCH":
-      return [
-        ...operation(expression.identifier),
-        " MATCH ",
         ...operation(expression.expression),
       ];
 

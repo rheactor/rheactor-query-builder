@@ -92,6 +92,10 @@ const functions = {
     };
   },
 
+  like(identifier: Identifier, pattern: Expression): Expression {
+    return { type: "LIKE", identifier, expression: pattern };
+  },
+
   match(identifier: Identifier, pattern: Expression): Expression {
     return { type: "MATCH", identifier, expression: pattern };
   },

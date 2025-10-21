@@ -33,6 +33,7 @@ declare const functions: {
     isNotNull(identifier: Identifier): Expression;
     jsonValue(argument: JsonValue, nullAsSQL?: boolean): Expression;
     jsonStaticValue(argument: JsonValue, nullAsSQL?: boolean): Expression;
+    like(identifier: Identifier, pattern: Expression): Expression;
     match(identifier: Identifier, pattern: Expression): Expression;
     lt(sideA: Expression, sideB: Expression): Expression;
     lte(sideA: Expression, sideB: Expression): Expression;
