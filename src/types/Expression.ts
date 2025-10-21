@@ -41,9 +41,9 @@ export type Expression =
   | { type: "IDENTIFIER"; identifier: Expression; alias?: Identifier }
   | { type: "IS NULL"; identifier: Identifier }
   | { type: "JSON"; argument: JsonValue }
+  | { type: "MATCH" | "SET"; identifier: Identifier; expression: Expression }
   | { type: "NOT"; expression: Expression }
   | { type: "RAW"; expression: string }
-  | { type: "SET"; identifier: Identifier; expression: Expression }
   | { type: "STATIC"; argument: ValueExtended }
   | { type: "VALUE"; argument: Value }
   | { type: ComparisonOperator; sideA: Expression; sideB: Expression };

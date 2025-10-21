@@ -183,6 +183,18 @@ describe("class Builder", () => {
       "SELECT TRUE WHERE NOT `test` IS NULL",
       [],
     ],
+    [
+      sql.select().where(sql.match("content", sql.value("search_term"))),
+      "SELECT TRUE WHERE `content` MATCH ?1",
+      ["search_term"],
+    ],
+    [
+      sql
+        .select()
+        .where(sql.not(sql.match("content", sql.value("search_term")))),
+      "SELECT TRUE WHERE NOT `content` MATCH ?1",
+      ["search_term"],
+    ],
     [sql.select().where(sql.or(false)), "SELECT TRUE", []],
     [sql.select().where(sql.or(false), sql.or(false)), "SELECT TRUE", []],
     [

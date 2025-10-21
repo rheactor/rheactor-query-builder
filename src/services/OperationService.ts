@@ -179,6 +179,13 @@ export function operation(expression: Expression): Operation[] {
         ...operation(expression.expression),
       ];
 
+    case "MATCH":
+      return [
+        ...operation(expression.identifier),
+        " MATCH ",
+        ...operation(expression.expression),
+      ];
+
     case "OPERATOR":
     default:
       return [

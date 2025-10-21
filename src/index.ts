@@ -92,6 +92,10 @@ const functions = {
     };
   },
 
+  match(identifier: Identifier, pattern: Expression): Expression {
+    return { type: "MATCH", identifier, expression: pattern };
+  },
+
   lt(sideA: Expression, sideB: Expression): Expression {
     return { type: "<", sideA, sideB };
   },

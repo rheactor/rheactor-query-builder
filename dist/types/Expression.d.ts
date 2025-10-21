@@ -52,15 +52,15 @@ export type Expression = Builder | Identifier | {
     type: "JSON";
     argument: JsonValue;
 } | {
+    type: "MATCH" | "SET";
+    identifier: Identifier;
+    expression: Expression;
+} | {
     type: "NOT";
     expression: Expression;
 } | {
     type: "RAW";
     expression: string;
-} | {
-    type: "SET";
-    identifier: Identifier;
-    expression: Expression;
 } | {
     type: "STATIC";
     argument: ValueExtended;
