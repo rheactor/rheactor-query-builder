@@ -20,9 +20,11 @@ describe("class Builder", () => {
     [sql.select().distinct(), "SELECT DISTINCT TRUE", []],
     [sql.select().distinct(false), "SELECT TRUE", []],
     [sql.select(false), "SELECT TRUE", []],
+    // eslint-disable-next-line unicorn/no-useless-undefined
     [sql.select(undefined), "SELECT TRUE", []],
     [sql.select(false, "test"), "SELECT `test`", []],
     [sql.select("test", false), "SELECT `test`", []],
+    // eslint-disable-next-line unicorn/no-useless-undefined
     [sql.select("test", undefined), "SELECT `test`", []],
     [sql.select("test"), "SELECT `test`", []],
     [sql.select("`test`"), "SELECT `test`", []],
@@ -57,11 +59,13 @@ describe("class Builder", () => {
     ],
     [sql.select().limit(10), "SELECT TRUE LIMIT 10", []],
     [sql.select().limit(false), "SELECT TRUE", []],
+    // eslint-disable-next-line unicorn/no-useless-undefined
     [sql.select().limit(undefined), "SELECT TRUE", []],
     [sql.select().limit(10, 5), "SELECT TRUE LIMIT 10 OFFSET 5", []],
     [sql.select().limit(false, 5), "SELECT TRUE OFFSET 5", []],
     [sql.select().limit(undefined, 5), "SELECT TRUE OFFSET 5", []],
     [sql.select().limit(10, false), "SELECT TRUE LIMIT 10", []],
+    // eslint-disable-next-line unicorn/no-useless-undefined
     [sql.select().limit(false, undefined), "SELECT TRUE", []],
     [sql.select().limit(undefined, 0), "SELECT TRUE", []],
     [
@@ -72,11 +76,13 @@ describe("class Builder", () => {
     [sql.select().offset(0), "SELECT TRUE", []],
     [sql.select().offset(10), "SELECT TRUE OFFSET 10", []],
     [sql.select().offset(false), "SELECT TRUE", []],
+    // eslint-disable-next-line unicorn/no-useless-undefined
     [sql.select().offset(undefined), "SELECT TRUE", []],
     [sql.select().offset(sql.value(10)), "SELECT TRUE OFFSET ?1", [10]],
     [sql.select().offset(10).limit(5), "SELECT TRUE LIMIT 5 OFFSET 10", []],
     [sql.select().where(false), "SELECT TRUE", []],
     [sql.select().where(null), "SELECT TRUE", []],
+    // eslint-disable-next-line unicorn/no-useless-undefined
     [sql.select().where(undefined), "SELECT TRUE", []],
     [sql.select().where(sql.value("")), "SELECT TRUE WHERE ?1", [""]],
     [sql.select().where(sql.value("ABC")), "SELECT TRUE WHERE ?1", ["ABC"]],
@@ -393,7 +399,7 @@ describe("class Builder", () => {
       [],
     ],
     [
-      sql.select().where(sql.staticValue(98765432123456789n)),
+      sql.select().where(sql.staticValue(98_765_432_123_456_789n)),
       "SELECT TRUE WHERE 98765432123456789",
       [],
     ],

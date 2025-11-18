@@ -38,9 +38,11 @@ export class BuilderUpdate extends Builder {
   }
 
   public override getOperations() {
-    const operations: Operation[] = ["UPDATE "];
-
-    operations.push(...joinOperations(this.tablesOperations, ", ", false), " ");
+    const operations: Operation[] = [
+      "UPDATE ",
+      ...joinOperations(this.tablesOperations, ", ", false),
+      " ",
+    ];
 
     this.generateJoinOperations(operations);
     this.generateSetOperation(operations);

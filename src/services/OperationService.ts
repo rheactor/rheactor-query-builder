@@ -59,7 +59,7 @@ export function operation(expression: Expression): Operation[] {
       ];
     }
 
-    case "IDENTIFIER":
+    case "IDENTIFIER": {
       return expression.alias === undefined
         ? operation(expression.identifier)
         : [
@@ -67,9 +67,11 @@ export function operation(expression: Expression): Operation[] {
             " AS ",
             ...operation(expression.alias),
           ];
+    }
 
-    case "EXCLUDED":
+    case "EXCLUDED": {
       return ["`excluded`.", ...operation(expression.identifier)];
+    }
 
     case "AND":
     case "OR": {
@@ -147,13 +149,15 @@ export function operation(expression: Expression): Operation[] {
       ];
     }
 
-    case "RAW":
+    case "RAW": {
       return [expression.expression];
+    }
 
-    case "JSON":
+    case "JSON": {
       return [{ value: JSON.stringify(expression.argument) }];
+    }
 
-    case "STATIC":
+    case "STATIC": {
       return expression.argument === null
         ? ["NULL"]
         : expression.argument === true
@@ -164,6 +168,7 @@ export function operation(expression: Expression): Operation[] {
                 typeof expression.argument === "bigint"
               ? [expression.argument.toString()]
               : [`"${expression.argument.replaceAll('"', '""')}"`];
+    }
 
     case "CALL": {
       return [
@@ -180,18 +185,20 @@ export function operation(expression: Expression): Operation[] {
       return ["NOT ", ...operation(expression.expression)];
     }
 
-    case "EXISTS":
+    case "EXISTS": {
       return ["EXISTS ( ", ...operation(expression.builder), ")"];
+    }
 
-    case "SET":
+    case "SET": {
       return [
         ...operation(expression.identifier),
         " = ",
         ...operation(expression.expression),
       ];
+    }
 
     case "OPERATOR":
-    default:
+    default: {
       return [
         "(",
         ...operation(expression.expressionA),
@@ -199,5 +206,6 @@ export function operation(expression: Expression): Operation[] {
         ...operation(expression.expressionB),
         ")",
       ];
+    }
   }
 }

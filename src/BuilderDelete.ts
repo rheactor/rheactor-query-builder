@@ -30,9 +30,11 @@ export class BuilderDelete extends Builder {
   }
 
   public override getOperations() {
-    const operations: Operation[] = ["DELETE FROM "];
-
-    operations.push(...joinOperations(this.tablesOperations, ", ", false), " ");
+    const operations: Operation[] = [
+      "DELETE FROM ",
+      ...joinOperations(this.tablesOperations, ", ", false),
+      " ",
+    ];
 
     this.generateJoinOperations(operations);
     this.generateWhereOperation(operations);
