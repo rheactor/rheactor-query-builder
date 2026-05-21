@@ -29,6 +29,7 @@ declare const functions: {
     gt(sideA: Expression, sideB: Expression): Expression;
     gte(sideA: Expression, sideB: Expression): Expression;
     isNull(identifier: Identifier): Expression;
+    in(identifier: Identifier, ...values: Expression[]): Expression;
     insert(table: Identifier, columns: Identifier[]): BuilderInsert;
     isNotNull(identifier: Identifier): Expression;
     jsonValue(argument: JsonValue, nullAsSQL?: boolean): Expression;

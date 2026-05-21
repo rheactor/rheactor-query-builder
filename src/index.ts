@@ -66,6 +66,10 @@ const functions = {
     return { type: "IS NULL", identifier };
   },
 
+  in(identifier: Identifier, ...values: Expression[]): Expression {
+    return { type: "IN", identifier, values };
+  },
+
   insert(table: Identifier, columns: Identifier[]) {
     return new BuilderInsert(table, columns);
   },

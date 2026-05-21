@@ -50,6 +50,10 @@ export type Expression = Builder | Identifier | {
     identifier: Expression;
     alias?: Identifier;
 } | {
+    type: "IN";
+    identifier: Identifier;
+    values: Expression[];
+} | {
     type: "IS NULL";
     identifier: Identifier;
 } | {

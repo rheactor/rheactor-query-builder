@@ -126,6 +126,26 @@ describe("class Builder", () => {
       "SELECT TRUE WHERE NOT `test` BETWEEN ?1 AND ?2",
       [123, 456],
     ],
+    [
+      sql.select().where(sql.in("status", sql.value("a"), sql.value("b"))),
+      "SELECT TRUE WHERE `status` IN (?1, ?2)",
+      ["a", "b"],
+    ],
+    [
+      sql.select().where(sql.in("status", sql.value("a"))),
+      "SELECT TRUE WHERE `status` IN (?1)",
+      ["a"],
+    ],
+    [
+      sql.select().where(sql.in("id", sql.select("id").from("active"))),
+      "SELECT TRUE WHERE `id` IN (SELECT `id` FROM `active` )",
+      [],
+    ],
+    [
+      sql.select().where(sql.not(sql.in("id", sql.value(1), sql.value(2)))),
+      "SELECT TRUE WHERE NOT `id` IN (?1, ?2)",
+      [1, 2],
+    ],
     [sql.select().where(sql.isNull("test")), "SELECT TRUE WHERE `test` IS NULL", []],
     [sql.select().where(sql.isNotNull("test")), "SELECT TRUE WHERE NOT `test` IS NULL", []],
     [

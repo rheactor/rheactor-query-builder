@@ -44,6 +44,7 @@ export type Expression =
   | { type: "EXCLUDED"; identifier: Identifier }
   | { type: "EXISTS"; builder: Builder }
   | { type: "IDENTIFIER"; identifier: Expression; alias?: Identifier }
+  | { type: "IN"; identifier: Identifier; values: Expression[] }
   | { type: "IS NULL"; identifier: Identifier }
   | { type: "JSON"; argument: JsonValue }
   | { type: "NOT"; expression: Expression }

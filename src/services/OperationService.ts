@@ -98,6 +98,19 @@ export function operation(expression: Expression): Operation[] {
       return [{ value: null }];
     }
 
+    case "IN": {
+      return [
+        ...operation(expression.identifier),
+        " IN (",
+        ...joinOperations(
+          expression.values.map((value) => operation(value)),
+          ", ",
+          false,
+        ),
+        ")",
+      ];
+    }
+
     case "IS NULL": {
       return [...operation(expression.identifier), " IS NULL"];
     }
