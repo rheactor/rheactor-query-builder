@@ -58,21 +58,13 @@ export abstract class Builder {
     };
   }
 
-  public join(
-    table: Identifier,
-    alias: Identifier,
-    ...conditions: Expression[]
-  ) {
+  public join(table: Identifier, alias: Identifier, ...conditions: Expression[]) {
     this.joins.push({ type: "INNER", table, alias, conditions });
 
     return this;
   }
 
-  public joinLeft(
-    table: Identifier,
-    alias: Identifier,
-    ...conditions: Expression[]
-  ) {
+  public joinLeft(table: Identifier, alias: Identifier, ...conditions: Expression[]) {
     this.joins.push({ type: "LEFT", table, alias, conditions });
 
     return this;
@@ -86,14 +78,9 @@ export abstract class Builder {
     return this;
   }
 
-  protected internalColumnAliased(
-    identifier: Falseable<Expression>,
-    alias?: Identifier,
-  ) {
+  protected internalColumnAliased(identifier: Falseable<Expression>, alias?: Identifier) {
     if (!isFalseable(identifier)) {
-      this.columnsOperations.push(
-        operation({ type: "IDENTIFIER", identifier, alias }),
-      );
+      this.columnsOperations.push(operation({ type: "IDENTIFIER", identifier, alias }));
     }
 
     return this;
@@ -107,14 +94,9 @@ export abstract class Builder {
     return this;
   }
 
-  protected internalTableAliased(
-    table: Falseable<Expression>,
-    alias?: Identifier,
-  ) {
+  protected internalTableAliased(table: Falseable<Expression>, alias?: Identifier) {
     if (!isFalseable(table)) {
-      this.tablesOperations.push(
-        operation({ type: "IDENTIFIER", identifier: table, alias }),
-      );
+      this.tablesOperations.push(operation({ type: "IDENTIFIER", identifier: table, alias }));
     }
 
     return this;
@@ -176,11 +158,7 @@ export abstract class Builder {
 
   protected generateFromOperation(operations: Operation[]) {
     if (this.tablesOperations.length > 0) {
-      operations.push(
-        "FROM ",
-        ...joinOperations(this.tablesOperations, ", ", false),
-        " ",
-      );
+      operations.push("FROM ", ...joinOperations(this.tablesOperations, ", ", false), " ");
     }
   }
 
@@ -197,22 +175,14 @@ export abstract class Builder {
       );
 
       if (join.conditions.length > 0) {
-        operations.push(
-          "ON ",
-          ...operation({ type: "AND", expressions: join.conditions }),
-          " ",
-        );
+        operations.push("ON ", ...operation({ type: "AND", expressions: join.conditions }), " ");
       }
     }
   }
 
   protected generateSetOperation(operations: Operation[]) {
     if (this.setsOperations.length > 0) {
-      operations.push(
-        "SET ",
-        ...joinOperations(this.setsOperations, ", ", false),
-        " ",
-      );
+      operations.push("SET ", ...joinOperations(this.setsOperations, ", ", false), " ");
     }
   }
 

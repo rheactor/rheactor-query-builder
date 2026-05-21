@@ -22,11 +22,7 @@ const functions = {
     return { type: "AND", expressions };
   },
 
-  between(
-    identifier: Identifier,
-    from: Expression,
-    to: Expression,
-  ): Expression {
+  between(identifier: Identifier, from: Expression, to: Expression): Expression {
     return { type: "BETWEEN", identifier, from, to };
   },
 
@@ -87,8 +83,7 @@ const functions = {
   jsonStaticValue(argument: JsonValue, nullAsSQL = false): Expression {
     return {
       type: "STATIC",
-      argument:
-        nullAsSQL && argument === null ? null : JSON.stringify(argument),
+      argument: nullAsSQL && argument === null ? null : JSON.stringify(argument),
     };
   },
 
@@ -116,11 +111,7 @@ const functions = {
     return { type: "NOT", expression };
   },
 
-  notBetween(
-    identifier: Identifier,
-    from: Expression,
-    to: Expression,
-  ): Expression {
+  notBetween(identifier: Identifier, from: Expression, to: Expression): Expression {
     return functions.not({ type: "BETWEEN", identifier, from, to });
   },
 
@@ -172,11 +163,7 @@ const functions = {
     return { type: "VALUE", argument };
   },
 
-  op(
-    operator: MathOperator,
-    expressionA: Expression,
-    expressionB: Expression,
-  ): Expression {
+  op(operator: MathOperator, expressionA: Expression, expressionB: Expression): Expression {
     return operator === "**"
       ? functions.call("POW", expressionA, expressionB)
       : { type: "OPERATOR", operator, expressionA, expressionB };

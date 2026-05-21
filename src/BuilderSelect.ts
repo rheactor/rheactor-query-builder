@@ -66,11 +66,7 @@ export class BuilderSelect extends Builder {
     return this.internalExpressions(this.groupByColumns, ...expressions);
   }
 
-  public orderBy(
-    expression: Expression,
-    direction?: OrderDirection,
-    nulls?: OrderNulls,
-  ) {
+  public orderBy(expression: Expression, direction?: OrderDirection, nulls?: OrderNulls) {
     this.orders.push({ expression, direction, nulls });
 
     return this;
@@ -86,10 +82,7 @@ export class BuilderSelect extends Builder {
     if (this.columnsOperations.length === 0) {
       operations.push("TRUE ");
     } else {
-      operations.push(
-        ...joinOperations(this.columnsOperations, ", ", false),
-        " ",
-      );
+      operations.push(...joinOperations(this.columnsOperations, ", ", false), " ");
     }
 
     this.generateFromOperation(operations);

@@ -4,11 +4,7 @@ import type { Operation } from "@/types/Operation.js";
 import { Builder } from "@/Builder";
 import { isFalseable } from "@/services/FalseableService";
 
-export function joinOperations(
-  operations: Operation[][],
-  joiner: string,
-  includeParens: boolean,
-) {
+export function joinOperations(operations: Operation[][], joiner: string, includeParens: boolean) {
   const joinedOperations: Operation[] = [];
 
   for (const innerOperations of operations) {
@@ -62,11 +58,7 @@ export function operation(expression: Expression): Operation[] {
     case "IDENTIFIER": {
       return expression.alias === undefined
         ? operation(expression.identifier)
-        : [
-            ...operation(expression.identifier),
-            " AS ",
-            ...operation(expression.alias),
-          ];
+        : [...operation(expression.identifier), " AS ", ...operation(expression.alias)];
     }
 
     case "EXCLUDED": {
@@ -95,10 +87,7 @@ export function operation(expression: Expression): Operation[] {
     }
 
     case "VALUE": {
-      if (
-        typeof expression.argument === "string" ||
-        typeof expression.argument === "number"
-      ) {
+      if (typeof expression.argument === "string" || typeof expression.argument === "number") {
         return [{ value: expression.argument }];
       }
 
@@ -135,18 +124,11 @@ export function operation(expression: Expression): Operation[] {
     }
 
     case "COLLATE": {
-      return [
-        ...operation(expression.expression),
-        ` COLLATE ${expression.collate}`,
-      ];
+      return [...operation(expression.expression), ` COLLATE ${expression.collate}`];
     }
 
     case "CAST": {
-      return [
-        "CAST(",
-        ...operation(expression.expression),
-        ` AS ${expression.cast})`,
-      ];
+      return ["CAST(", ...operation(expression.expression), ` AS ${expression.cast})`];
     }
 
     case "RAW": {
@@ -164,8 +146,7 @@ export function operation(expression: Expression): Operation[] {
           ? ["TRUE"]
           : expression.argument === false
             ? ["FALSE"]
-            : typeof expression.argument === "number" ||
-                typeof expression.argument === "bigint"
+            : typeof expression.argument === "number" || typeof expression.argument === "bigint"
               ? [expression.argument.toString()]
               : [`"${expression.argument.replaceAll('"', '""')}"`];
     }
@@ -190,11 +171,7 @@ export function operation(expression: Expression): Operation[] {
     }
 
     case "SET": {
-      return [
-        ...operation(expression.identifier),
-        " = ",
-        ...operation(expression.expression),
-      ];
+      return [...operation(expression.identifier), " = ", ...operation(expression.expression)];
     }
 
     case "OPERATOR":

@@ -34,13 +34,7 @@ export class BuilderCase extends Builder {
     }
 
     for (const [when, then] of this.whens) {
-      operations.push(
-        "WHEN ",
-        ...operation(when),
-        " THEN ",
-        ...operation(then),
-        " ",
-      );
+      operations.push("WHEN ", ...operation(when), " THEN ", ...operation(then), " ");
     }
 
     if (this.expressionElse !== undefined) {

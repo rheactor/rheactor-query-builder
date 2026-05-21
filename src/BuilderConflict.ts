@@ -25,9 +25,7 @@ export class BuilderConflict extends Builder {
   }
 
   public set(identifier: Identifier, expression: Expression) {
-    this.setsOperations.push(
-      operation({ type: "SET", identifier, expression }),
-    );
+    this.setsOperations.push(operation({ type: "SET", identifier, expression }));
 
     return this;
   }
@@ -40,18 +38,11 @@ export class BuilderConflict extends Builder {
     const operations: Operation[] = ["ON CONFLICT "];
 
     if (this.columnsOperations.length > 0) {
-      operations.push(
-        ...joinOperations(this.columnsOperations, ", ", true),
-        " ",
-      );
+      operations.push(...joinOperations(this.columnsOperations, ", ", true), " ");
     }
 
     if (this.conflictWhereExpression !== undefined) {
-      operations.push(
-        "WHERE ",
-        ...operation(this.conflictWhereExpression),
-        " ",
-      );
+      operations.push("WHERE ", ...operation(this.conflictWhereExpression), " ");
     }
 
     operations.push(this.conflictDoNothing ? "DO NOTHING" : "DO UPDATE ");

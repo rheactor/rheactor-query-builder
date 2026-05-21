@@ -14,9 +14,7 @@ export class BuilderUpdate extends Builder {
   }
 
   public set(identifier: Identifier, expression: Expression) {
-    this.setsOperations.push(
-      operation({ type: "SET", identifier, expression }),
-    );
+    this.setsOperations.push(operation({ type: "SET", identifier, expression }));
 
     return this;
   }

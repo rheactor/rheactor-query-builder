@@ -37,9 +37,7 @@ export class BuilderInsert extends Builder {
   }
 
   public onConflictIgnore(columns?: Identifier[], where?: Expression) {
-    this.onConflictBuilders.push(
-      new BuilderConflict(columns, where).doNothing(),
-    );
+    this.onConflictBuilders.push(new BuilderConflict(columns, where).doNothing());
 
     return this;
   }
@@ -75,9 +73,7 @@ export class BuilderInsert extends Builder {
         operations.push(
           "VALUES ",
           ...joinOperations(
-            this.valuesOperations.flatMap((values) => [
-              joinOperations(values, ", ", true),
-            ]),
+            this.valuesOperations.flatMap((values) => [joinOperations(values, ", ", true)]),
             ", ",
             false,
           ),

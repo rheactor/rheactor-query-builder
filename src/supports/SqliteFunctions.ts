@@ -20,11 +20,7 @@ function call(
   separatorOrFormat: Expression,
   ...expressions: Expression[]
 ): Expression;
-function call(
-  identifier: "GLOB",
-  pattern: Expression,
-  value: Expression,
-): Expression;
+function call(identifier: "GLOB", pattern: Expression, value: Expression): Expression;
 function call(
   identifier:
     | "HEX"
@@ -39,48 +35,21 @@ function call(
     | "UNISTR",
   value: Expression,
 ): Expression;
-function call(
-  identifier: "UNHEX",
-  value: Expression,
-  escapes: Expression,
-): Expression;
-function call(
-  identifier: "IFNULL" | "NULLIF",
-  valueA: Expression,
-  valueB: Expression,
-): Expression;
-function call(
-  identifier: "IF" | "IIF",
-  ...expressions: Expression[]
-): Expression;
-function call(
-  identifier: "INSTR",
-  valueA: Expression,
-  valueB: Expression,
-): Expression;
-function call(
-  identifier: "LIKE",
-  pattern: Expression,
-  value: Expression,
-): Expression;
+function call(identifier: "UNHEX", value: Expression, escapes: Expression): Expression;
+function call(identifier: "IFNULL" | "NULLIF", valueA: Expression, valueB: Expression): Expression;
+function call(identifier: "IF" | "IIF", ...expressions: Expression[]): Expression;
+function call(identifier: "INSTR", valueA: Expression, valueB: Expression): Expression;
+function call(identifier: "LIKE", pattern: Expression, value: Expression): Expression;
 function call(
   identifier: "LIKE",
   pattern: Expression,
   value: Expression,
   escape: Expression,
 ): Expression;
-function call(
-  identifier: "LIKELIHOOD",
-  valueA: Expression,
-  valueB: Expression,
-): Expression;
+function call(identifier: "LIKELIHOOD", valueA: Expression, valueB: Expression): Expression;
 function call(identifier: "LIKELY" | "UNLIKELY", value: Expression): Expression;
 function call(identifier: "LOAD_EXTENSION", name: Expression): Expression;
-function call(
-  identifier: "LOAD_EXTENSION",
-  name: Expression,
-  entryPoint: Expression,
-): Expression;
+function call(identifier: "LOAD_EXTENSION", name: Expression, entryPoint: Expression): Expression;
 function call(
   identifier: "LOWER" | "LTRIM" | "RTRIM" | "TRIM" | "UPPER",
   value: Expression,
@@ -90,17 +59,9 @@ function call(
   value: Expression,
   character: Expression,
 ): Expression;
-function call(
-  identifier: "MAX" | "MIN",
-  ...expressions: Expression[]
-): Expression;
-function call(
-  identifier: "OCTET_LENGTH" | "RANDOMBLOB" | "ZEROBLOB",
-  size: Expression,
-): Expression;
-function call(
-  identifier: "LAST_INSERT_ROWID" | "RANDOM" | "TOTAL_CHANGES",
-): Expression;
+function call(identifier: "MAX" | "MIN", ...expressions: Expression[]): Expression;
+function call(identifier: "OCTET_LENGTH" | "RANDOMBLOB" | "ZEROBLOB", size: Expression): Expression;
+function call(identifier: "LAST_INSERT_ROWID" | "RANDOM" | "TOTAL_CHANGES"): Expression;
 function call(
   identifier: "REPLACE",
   value: Expression,
@@ -108,11 +69,7 @@ function call(
   replaceBy: Expression,
 ): Expression;
 function call(identifier: "ROUND", value: Expression): Expression;
-function call(
-  identifier: "ROUND",
-  value: Expression,
-  digits: Expression,
-): Expression;
+function call(identifier: "ROUND", value: Expression, digits: Expression): Expression;
 function call(
   identifier: "SQLITE_COMPILEOPTION_GET" | "SQLITE_COMPILEOPTION_USED",
   option: Expression,
@@ -171,9 +128,7 @@ function call(identifier: "PI"): Expression;
 
 // Built-In Date and Time Functions.
 // @ref https://www.sqlite.org/lang_datefunc.html
-function call(
-  identifier: "DATE" | "DATETIME" | "JULIANDAY" | "TIME" | "UNIXEPOCH",
-): Expression;
+function call(identifier: "DATE" | "DATETIME" | "JULIANDAY" | "TIME" | "UNIXEPOCH"): Expression;
 function call(
   identifier: "DATE" | "DATETIME" | "JULIANDAY" | "TIME" | "UNIXEPOCH",
   timeValue: Expression,
@@ -186,30 +141,16 @@ function call(
   timeValue: Expression,
   ...modifiers: Expression[]
 ): Expression;
-function call(
-  identifier: "TIMEDIFF",
-  timeA: Expression,
-  timeB: Expression,
-): Expression;
+function call(identifier: "TIMEDIFF", timeA: Expression, timeB: Expression): Expression;
 
 // Built-In JSON Functions.
 // @ref https://www.sqlite.org/json1.html
 function call(identifier: "JSON" | "JSONB", json: Expression): Expression;
-function call(
-  identifier: "JSON_ARRAY" | "JSONB_ARRAY",
-  ...values: Expression[]
-): Expression;
+function call(identifier: "JSON_ARRAY" | "JSONB_ARRAY", ...values: Expression[]): Expression;
 function call(identifier: "JSON_ARRAY_LENGTH", json: Expression): Expression;
-function call(
-  identifier: "JSON_ARRAY_LENGTH",
-  json: Expression,
-  path: Expression,
-): Expression;
+function call(identifier: "JSON_ARRAY_LENGTH", json: Expression, path: Expression): Expression;
 function call(identifier: "JSON_ERROR_POSITION", json: Expression): Expression;
-function call(
-  identifier: "JSON_EXTRACT" | "JSONB_EXTRACT",
-  json: Expression,
-): Expression;
+function call(identifier: "JSON_EXTRACT" | "JSONB_EXTRACT", json: Expression): Expression;
 function call(
   identifier: "JSON_EXTRACT" | "JSONB_EXTRACT",
   json: Expression,
@@ -221,10 +162,7 @@ function call(
   path: Expression,
   ...values: Expression[]
 ): Expression;
-function call(
-  identifier: "JSON_OBJECT" | "JSONB_OBJECT",
-  ...values: Expression[]
-): Expression;
+function call(identifier: "JSON_OBJECT" | "JSONB_OBJECT", ...values: Expression[]): Expression;
 function call(
   identifier: "JSON_PATCH" | "JSONB_PATCH",
   json: Expression,
@@ -247,23 +185,12 @@ function call(
   ...values: Expression[]
 ): Expression;
 function call(identifier: "JSON_TYPE", json: Expression): Expression;
-function call(
-  identifier: "JSON_TYPE",
-  json: Expression,
-  path: Expression,
-): Expression;
+function call(identifier: "JSON_TYPE", json: Expression, path: Expression): Expression;
 function call(identifier: "JSON_VALID", json: Expression): Expression;
-function call(
-  identifier: "JSON_VALID",
-  json: Expression,
-  flags: Expression,
-): Expression;
+function call(identifier: "JSON_VALID", json: Expression, flags: Expression): Expression;
 function call(identifier: "JSON_QUOTE", value: Expression): Expression;
 
-function call(
-  identifier: "JSON_GROUP_ARRAY" | "JSONB_GROUP_ARRAY",
-  value: Expression,
-): Expression;
+function call(identifier: "JSON_GROUP_ARRAY" | "JSONB_GROUP_ARRAY", value: Expression): Expression;
 function call(
   identifier: "JSON_GROUP_OBJECT" | "JSONB_GROUP_OBJECT",
   label: Expression,
@@ -278,10 +205,7 @@ function call(
 ): Expression;
 // allow count() / count(*) style invocation (no-arg)
 function call(identifier: "COUNT"): Expression;
-function call(
-  identifier: "GROUP_CONCAT" | "STRING_AGG",
-  value: Expression,
-): Expression;
+function call(identifier: "GROUP_CONCAT" | "STRING_AGG", value: Expression): Expression;
 function call(
   identifier: "GROUP_CONCAT" | "STRING_AGG",
   value: Expression,
@@ -289,17 +213,9 @@ function call(
 ): Expression;
 
 function call(identifier: "JSON_EACH", json: Expression): Expression;
-function call(
-  identifier: "JSON_EACH",
-  json: Expression,
-  path: Expression,
-): Expression;
+function call(identifier: "JSON_EACH", json: Expression, path: Expression): Expression;
 function call(identifier: "JSON_TREE", json: Expression): Expression;
-function call(
-  identifier: "JSON_TREE",
-  json: Expression,
-  path: Expression,
-): Expression;
+function call(identifier: "JSON_TREE", json: Expression, path: Expression): Expression;
 
 function call(...args: Parameters<typeof customCall>): Expression {
   return customCall(...args);

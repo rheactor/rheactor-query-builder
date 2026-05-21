@@ -6,11 +6,7 @@ import type { Operation } from "@/types/Operation.js";
 export class BuilderSetOperation extends Builder {
   public constructor(
     private readonly queries: Expression[],
-    private readonly setOperation:
-      | "EXCEPT"
-      | "INTERSECT"
-      | "UNION ALL"
-      | "UNION" = "UNION",
+    private readonly setOperation: "EXCEPT" | "INTERSECT" | "UNION ALL" | "UNION" = "UNION",
   ) {
     super();
   }
