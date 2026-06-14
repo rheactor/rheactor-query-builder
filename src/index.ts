@@ -85,10 +85,7 @@ const functions = {
   },
 
   jsonStaticValue(argument: JsonValue, nullAsSQL = false): Expression {
-    return {
-      type: "STATIC",
-      argument: nullAsSQL && argument === null ? null : JSON.stringify(argument),
-    };
+    return functions.staticValue(nullAsSQL && argument === null ? null : JSON.stringify(argument));
   },
 
   like(identifier: Identifier, pattern: Expression): Expression {
@@ -132,6 +129,18 @@ const functions = {
   },
 
   staticValue(argument: ValueExtended): Expression {
+    if (typeof argument === "string") {
+      const parts = argument.split(/:(?=[a-z_])/i);
+
+      if (parts.length > 1) {
+        return call(
+          "CONCAT_WS",
+          functions.staticValue(":"),
+          ...parts.map((part) => functions.staticValue(part)),
+        );
+      }
+    }
+
     return { type: "STATIC", argument };
   },
 

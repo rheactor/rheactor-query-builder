@@ -292,6 +292,61 @@ describe("class Builder", () => {
     ],
     [sql.select().where(sql.staticValue(null)), "SELECT TRUE WHERE NULL", []],
     [
+      sql.select().where(sql.staticValue("Olá :name")),
+      'SELECT TRUE WHERE CONCAT_WS(":", "Olá ", "name")',
+      [],
+    ],
+    [
+      sql.select().where(sql.staticValue("Olá :name, como :vai?")),
+      'SELECT TRUE WHERE CONCAT_WS(":", "Olá ", "name, como ", "vai?")',
+      [],
+    ],
+    [
+      sql.select().where(sql.staticValue(":name")),
+      'SELECT TRUE WHERE CONCAT_WS(":", "", "name")',
+      [],
+    ],
+    [
+      sql.select().where(sql.staticValue("only:colon")),
+      'SELECT TRUE WHERE CONCAT_WS(":", "only", "colon")',
+      [],
+    ],
+    [
+      sql.select().where(sql.staticValue("a:b:c")),
+      'SELECT TRUE WHERE CONCAT_WS(":", "a", "b", "c")',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue("Olá :name")),
+      'SELECT TRUE WHERE CONCAT_WS(":", """Olá ", "name""")',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue("Olá :name, como :vai?")),
+      'SELECT TRUE WHERE CONCAT_WS(":", """Olá ", "name, como ", "vai?""")',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue(":name")),
+      'SELECT TRUE WHERE CONCAT_WS(":", """", "name""")',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue("only:colon")),
+      'SELECT TRUE WHERE CONCAT_WS(":", """only", "colon""")',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue("a:b:c")),
+      'SELECT TRUE WHERE CONCAT_WS(":", """a", "b", "c""")',
+      [],
+    ],
+    [
+      sql.select().where(sql.jsonStaticValue({ abc: ":abc" })),
+      'SELECT TRUE WHERE CONCAT_WS(":", "{""abc"":""", "abc""}")',
+      [],
+    ],
+    [
       sql.select().conditional(false, (builder) => builder.where(sql.value(true))),
       "SELECT TRUE",
       [],
